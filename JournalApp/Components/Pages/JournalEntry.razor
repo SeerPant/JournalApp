@@ -1,0 +1,63 @@
+﻿@page "/journal"
+
+<div class="journal-container">
+    
+    @*Header Bar*@
+    <div class="header-bar">
+        <MudText Typo="Typo.h5" Style="color: white; font-weight: 600;">Journal App</MudText>
+    </div>
+    
+    @*white content box, NEED TO ADD BACKGROUND LATER*@
+    <div class="content-box">
+        
+        @*title and primary mood row *@
+        <div class="title-mood-row">
+            @*title input field*@
+            <MudTextField @bind-Value="title"
+                          Placeholder="Title"
+                          Variant="Variant.Outlined"
+                          Class="title-field"
+                          Margin="Margin.Dense" />
+            
+            @*primary mood dropdown*@
+            <MudSelect @bind-Value="selectedPrimaryMood"
+                       Placeholder="Primary Mood"
+                       Variant="Variant.Outlined"
+                       Class="mood-dropdown"
+                       Margin="Margin.Dense">
+                @foreach (var mood in primaryMoods)
+                {
+                    <MudSelectItem Value="@mood">@mood</MudSelectItem>
+                }
+            </MudSelect>
+        </div>
+        
+        @*journal content area *@
+        <MudTextField @bind-Value="content"
+                      Placeholder="Write your journal entry here..."
+                      Variant="Variant.Outlined"
+                      Lines="15"
+                      Class="content-field"
+                      Margin="Margin.Dense" />
+        
+    </div>
+    
+</div>
+
+@code {
+    private string title = string.Empty;
+    private string content = string.Empty;
+    
+    //Primary Mood selection
+    private string? selectedPrimaryMood = null;
+    
+    //list for primary mood options
+    private List<string> primaryMoods = new List<string>
+    {
+        "Happy",
+        "Sad",
+        "Angry",
+        "Scared",
+        "Energetic"
+    };
+}

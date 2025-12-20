@@ -1,2 +1,3 @@
-2025/12/20-14:26:19.854 2abc Creating DB C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\JournalApp.exe.WebView2\EBWebView\Default\Local Storage\leveldb since it was missing.
-2025/12/20-14:26:19.877 2abc Reusing MANIFEST C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\JournalApp.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2025/12/20-20:18:10.497 abbc Reusing MANIFEST C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\JournalApp.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2025/12/20-20:18:10.505 abbc Recovering log #3
+2025/12/20-20:18:10.509 abbc Reusing old log C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\JournalApp.exe.WebView2\EBWebView\Default\Local Storage\leveldb/000003.log 

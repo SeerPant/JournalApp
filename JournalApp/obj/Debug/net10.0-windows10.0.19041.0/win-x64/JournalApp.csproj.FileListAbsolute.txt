@@ -1,7 +1,6 @@
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Platforms\Windows\App.xbf
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\AboutAssets.txt
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\JournalApp.styles.css
-C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\JournalApp.ue46imi7rg.bundle.scp.css
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\app.css
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\index.html
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
@@ -467,7 +466,6 @@ C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets\msbuild.buildMultiTargeting.JournalApp.props
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets\msbuild.buildTransitive.JournalApp.props
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets.pack.json
-C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets.upToDateCheck.txt
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets.publish.json
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets.publish.endpoints.json
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\swae.publish.ex.cache
@@ -568,3 +566,13 @@ C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\qualifiers.txt
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\qualifiers.txt.intermediate
 C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\MultipleQualifiersPerDimensionFound.txt
+c:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\JournalApp.sourcelink.json
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\staticwebassets.upToDateCheck.txt
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\_content\MudBlazor\MudBlazor.min.css
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\_content\MudBlazor\MudBlazor.min.js
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Microsoft.Extensions.Localization.dll
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Microsoft.Extensions.Localization.Abstractions.dll
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\MudBlazor.dll
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Components\Pages\JournalEntry.razor.css
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\obj\Debug\net10.0-windows10.0.19041.0\win-x64\scopedcss\Components\Pages\JournalEntry.razor.rz.scp.css
+C:\Personal\University\Year 3\.NET\CW Y3S1\JournalApp\JournalApp\JournalApp\bin\Debug\net10.0-windows10.0.19041.0\win-x64\wwwroot\JournalApp.oh3f1e0uk9.bundle.scp.css

@@ -1,14 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
+        @* <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        </div> *@
+        @*Header bar*@
+    <div class="header-bar">
+        <MudText Typo="Typo.h5" Style="color: white; font-weight: 600;">Journal App</MudText>
+    </div>
 
         <article class="content px-4">
             @Body
