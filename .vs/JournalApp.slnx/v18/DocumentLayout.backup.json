@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2CDC239B-8ADB-4778-B71E-FE0559D04104}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "JournalApp\\Components\\_Imports.razor",
+              "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\_Imports.razor",
+              "RelativeToolTip": "JournalApp\\Components\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-20T08:45:49.903Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\.gitignore",
+              "RelativeDocumentMoniker": "JournalApp\\.gitignore",
+              "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\.gitignore",
+              "RelativeToolTip": "JournalApp\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-12-20T08:44:01.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "JournalApp\\Components\\Pages\\Home.razor",
+              "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "JournalApp\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-20T08:40:46.145Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
