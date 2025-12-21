@@ -1,0 +1,201 @@
+﻿@page "/journals/view/{Id:int}"
+@using JournalApp.Models
+@using JournalApp.Services
+@inject JournalService JournalService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    @if (entry != null)
+    {
+        <MudPaper Class="pa-6" Elevation="3">
+            <MudGrid>
+                <MudItem xs="12" Class="d-flex justify-space-between align-center">
+                    <MudText Typo="Typo.h4">@entry.Title</MudText>
+                    <div>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Color="Color.Primary"
+                                       OnClick="EditEntry"
+                                       Size="Size.Large" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Color="Color.Error"
+                                       OnClick="DeleteEntry"
+                                       Size="Size.Large" />
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider />
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" />
+                        Date: @entry.Date.ToString("MMMM dd, yyyy")
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        <MudIcon Icon="@Icons.Material.Filled.AccessTime" Size="Size.Small" />
+                        Created: @entry.CreatedAt.ToString("MMM dd, yyyy h:mm tt")
+                    </MudText>
+                </MudItem>
+
+                @if (entry.UpdatedAt != entry.CreatedAt)
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            <MudIcon Icon="@Icons.Material.Filled.Update" Size="Size.Small" />
+                            Last Updated: @entry.UpdatedAt.ToString("MMM dd, yyyy h:mm tt")
+                        </MudText>
+                    </MudItem>
+                }
+
+                <MudItem xs="12">
+                    <MudDivider />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Class="mb-2">Mood</MudText>
+                    <MudChipSet T="string">
+                        <MudChip T="string"
+                                 Color="GetMoodColor(entry.PrimaryMood)"
+                                 Size="Size.Medium"
+                                 Icon="@Icons.Material.Filled.Mood">
+                            @entry.PrimaryMood (Primary)
+                        </MudChip>
+
+                        @if (!string.IsNullOrEmpty(entry.SecondaryMood1))
+                        {
+                            <MudChip T="string" Color="Color.Default" Size="Size.Medium">
+                                @entry.SecondaryMood1
+                            </MudChip>
+                        }
+
+                        @if (!string.IsNullOrEmpty(entry.SecondaryMood2))
+                        {
+                            <MudChip T="string" Color="Color.Default" Size="Size.Medium">
+                                @entry.SecondaryMood2
+                            </MudChip>
+                        }
+                    </MudChipSet>
+                </MudItem>
+
+                @if (entry.Tags.Any())
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Class="mb-2">Tags</MudText>
+                        <MudChipSet T="string">
+                            @foreach (var tag in entry.Tags)
+                            {
+                                <MudChip T="string"
+                                         Color="Color.Primary"
+                                         Size="Size.Small"
+                                         Icon="@Icons.Material.Filled.Tag">
+                                    @tag
+                                </MudChip>
+                            }
+                        </MudChipSet>
+                    </MudItem>
+                }
+
+                <MudItem xs="12">
+                    <MudDivider />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Class="mb-3">Content</MudText>
+                    <MudPaper Class="pa-4" Elevation="0" Style="background-color: var(--mud-palette-background-grey);">
+                        <MudText Typo="Typo.body1" Style="white-space: pre-wrap; line-height: 1.8;">
+                            @entry.Content
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudDivider />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Word Count: @GetWordCount(entry.Content)
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" Class="d-flex gap-2 mt-4">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.ArrowBack"
+                               OnClick="BackToList">
+                        Back to List
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Secondary"
+                               StartIcon="@Icons.Material.Filled.Edit"
+                               OnClick="EditEntry">
+                        Edit Entry
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Warning">
+            Journal entry not found.
+        </MudAlert>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.ArrowBack"
+                   OnClick="BackToList"
+                   Class="mt-2">
+            Back to List
+        </MudButton>
+    }
+</MudContainer>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private JournalEntry? entry;
+
+    protected override void OnInitialized()
+    {
+        entry = JournalService.GetEntryById(Id);
+    }
+
+    private Color GetMoodColor(string mood)
+    {
+        if (MoodCategories.Moods["Positive"].Contains(mood))
+            return Color.Success;
+        if (MoodCategories.Moods["Negative"].Contains(mood))
+            return Color.Error;
+        return Color.Default;
+    }
+
+    private int GetWordCount(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return 0;
+
+        return content.Split(new[] { ' ', '\n', '\r', '\t' },
+            StringSplitOptions.RemoveEmptyEntries).Length;
+    }
+
+    private void BackToList()
+    {
+        Navigation.NavigateTo("/journals");
+    }
+
+    private void EditEntry()
+    {
+        Navigation.NavigateTo($"/journals/edit/{Id}");
+    }
+
+    private void DeleteEntry()
+    {
+        JournalService.DeleteEntry(Id);
+        Navigation.NavigateTo("/journals");
+    }
+}

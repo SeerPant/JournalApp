@@ -1,6 +1,4 @@
 Components\Layout\MainLayout.razor.css
-Components\Layout\NavMenu.razor.css
-Components\Pages\JournalEntry.razor.css
 OpenSans-Regular.ttf
 appicon.ico
 appiconLargeTile.scale-100.png
@@ -59,7 +57,7 @@ splashSplashScreen.scale-150.png
 splashSplashScreen.scale-200.png
 splashSplashScreen.scale-400.png
 wwwroot\JournalApp.styles.css
-wwwroot\JournalApp.oh3f1e0uk9.bundle.scp.css
+wwwroot\JournalApp.k4q3ptp9vb.bundle.scp.css
 AboutAssets.txt
 wwwroot\app.css
 wwwroot\index.html

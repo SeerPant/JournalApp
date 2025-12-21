@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using MudBlazor.Services; 
+using MudBlazor.Services;
+using JournalApp.Services;
 
 namespace JournalApp
 {
@@ -16,12 +17,18 @@ namespace JournalApp
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddMudServices();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
+
+            //Add MudBlazor services
+            builder.Services.AddMudServices();
+
+            
+            builder.Services.AddSingleton<JournalService>();
+
             return builder.Build();
         }
     }

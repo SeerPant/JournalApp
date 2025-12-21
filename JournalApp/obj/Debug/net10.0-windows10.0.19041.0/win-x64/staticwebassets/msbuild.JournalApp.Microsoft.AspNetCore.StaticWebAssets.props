@@ -32,12 +32,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>om11rfdhlp</Fingerprint>
-      <Integrity>gGVzx634HwsOw1KkwwL8LFxbazBiACSSvJ3iCCXOMTQ=</Integrity>
+      <Fingerprint>baqxpnbk1i</Fingerprint>
+      <Integrity>rddm2bYUnBrAAoK8K3ihB7soOS5lPHgAULB70rQlJ9E=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>880</FileLength>
-      <LastWriteTime>Sat, 20 Dec 2025 08:40:41 GMT</LastWriteTime>
+      <FileLength>1427</FileLength>
+      <LastWriteTime>Sun, 21 Dec 2025 03:05:18 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\JournalApp.styles.css'))">
@@ -52,12 +52,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName>ScopedCss</AssetTraitName>
       <AssetTraitValue>ApplicationBundle</AssetTraitValue>
-      <Fingerprint>oh3f1e0uk9</Fingerprint>
-      <Integrity>lCeDeXvccfzY7Y3YgiIahUxSjI9zfXCWRJPVxTWsQKY=</Integrity>
+      <Fingerprint>k4q3ptp9vb</Fingerprint>
+      <Integrity>BMTbysXHxYI7w7EiS+znaX+VMJ+JKaJh7ivngHh65x0=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>7650</FileLength>
-      <LastWriteTime>Sat, 20 Dec 2025 14:33:01 GMT</LastWriteTime>
+      <FileLength>1736</FileLength>
+      <LastWriteTime>Sun, 21 Dec 2025 04:31:28 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\JournalApp.styles.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\lib\bootstrap\dist\css\bootstrap.min.css'))">

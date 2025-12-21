@@ -1,9 +1,16 @@
-# Build output
+#Visual Studio / MAUI / .NET
 bin/
 obj/
-
-# VS / Rider / user files
-.vs/
 *.user
-*.userosscache
 *.suo
+*.userprefs
+.vs/
+*.DS_Store
+
+#NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# WebView2
+*.WebView2/

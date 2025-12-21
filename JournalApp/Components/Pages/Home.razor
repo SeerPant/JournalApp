@@ -1,3 +1,76 @@
 ﻿@page "/"
 
-<h1>Hello! Welcome to the Journal app</h1>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
+    <MudPaper Class="pa-8" Elevation="3">
+        <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
+            <MudIcon Icon="@Icons.Material.Filled.MenuBook" Size="Size.Large" Class="mr-2" />
+            Welcome to Your Journal
+        </MudText>
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-4">
+            Document your daily thoughts, track your moods, and reflect on your journey.
+        </MudText>
+        
+        <MudDivider Class="my-4" />
+        
+        <MudGrid Justify="Justify.Center" Spacing="3">
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Variant="Variant.Filled" 
+                          Color="Color.Primary" 
+                          FullWidth="true"
+                          Size="Size.Large"
+                          StartIcon="@Icons.Material.Filled.Add"
+                          Href="/journals/create">
+                    New Entry
+                </MudButton>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Primary" 
+                          FullWidth="true"
+                          Size="Size.Large"
+                          StartIcon="@Icons.Material.Filled.Book"
+                          Href="/journals">
+                    View Journals
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+        
+        <MudDivider Class="my-6" />
+        
+        <MudText Typo="Typo.h6" Class="mb-3">Features</MudText>
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-3" Elevation="0">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Mood" Size="Size.Small" /> Mood Tracking
+                    </MudText>
+                    <MudText Typo="Typo.body2">Track your emotions with primary and secondary moods</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-3" Elevation="0">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Tag" Size="Size.Small" /> Smart Tags
+                    </MudText>
+                    <MudText Typo="Typo.body2">Organize entries with custom and pre-built tags</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-3" Elevation="0">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" /> Daily Entries
+                    </MudText>
+                    <MudText Typo="Typo.body2">One entry per day</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-3" Elevation="0">
+                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Search" Size="Size.Small" /> Search & Filter
+                    </MudText>
+                    <MudText Typo="Typo.body2">Find entries by content, date, mood, or tags</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+</MudContainer>
