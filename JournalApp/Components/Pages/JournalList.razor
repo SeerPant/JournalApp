@@ -1,0 +1,151 @@
+﻿@page "/journals"
+@using JournalApp.Models
+@using JournalApp.Services
+@inject JournalService JournalService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">My Journal Entries</MudText>
+    
+    <MudButton Variant="Variant.Filled" 
+               Color="Color.Primary" 
+               StartIcon="@Icons.Material.Filled.Add"
+               OnClick="CreateNewEntry"
+               Class="mb-4">
+        New Entry
+    </MudButton>
+
+    @if (entries.Any())
+    {
+        <MudGrid>
+            @foreach (var entry in entries)
+            {
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Elevation="2" Class="pa-4">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">@entry.Title</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    @entry.Date.ToString("MMM dd, yyyy")
+                                </MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                @GetContentPreview(entry.Content)
+                            </MudText>
+                            
+                            <MudChip T="string" Size="Size.Small" Color="GetMoodColor(entry.PrimaryMood)">
+                                @entry.PrimaryMood
+                            </MudChip>
+                            
+                            @if (!string.IsNullOrEmpty(entry.SecondaryMood1))
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Default">
+                                    @entry.SecondaryMood1
+                                </MudChip>
+                            }
+                            
+                            @if (entry.Tags.Any())
+                            {
+                                <MudText Typo="Typo.caption" Class="mt-2">
+                                    Tags: @string.Join(", ", entry.Tags.Take(3))
+                                </MudText>
+                            }
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Size="Size.Small" 
+                                      Color="Color.Primary" 
+                                      OnClick="@(() => ViewEntry(entry.Id))">
+                                View
+                            </MudButton>
+                            <MudButton Size="Size.Small" 
+                                      Color="Color.Secondary" 
+                                      OnClick="@(() => EditEntry(entry.Id))">
+                                Edit
+                            </MudButton>
+                            <MudButton Size="Size.Small" 
+                                      Color="Color.Error" 
+                                      OnClick="@(() => DeleteEntry(entry.Id))">
+                                Delete
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+        <MudPagination Class="mt-4" 
+                      Count="@totalPages" 
+                      Selected="@currentPage" 
+                      SelectedChanged="OnPageChanged"
+                      Color="Color.Primary" />
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info">
+            No journal entries yet. Create your first entry!
+        </MudAlert>
+    }
+</MudContainer>
+
+@code {
+    private List<JournalEntry> entries = new();
+    private int currentPage = 1;
+    private int pageSize = 6;
+    private int totalPages = 1;
+
+    protected override void OnInitialized()
+    {
+        LoadEntries();
+    }
+
+    private void LoadEntries()
+    {
+        var result = JournalService.GetPaginatedEntries(currentPage, pageSize);
+        entries = result.Items;
+        totalPages = (int)Math.Ceiling(result.TotalCount / (double)pageSize);
+    }
+
+    private void OnPageChanged(int page)
+    {
+        currentPage = page;
+        LoadEntries();
+    }
+
+    private string GetContentPreview(string content)
+    {
+        return content.Length > 100 ? content.Substring(0, 100) + "..." : content;
+    }
+
+    private Color GetMoodColor(string mood)
+    {
+        if (MoodCategories.Moods["Positive"].Contains(mood))
+            return Color.Success;
+        if (MoodCategories.Moods["Negative"].Contains(mood))
+            return Color.Error;
+        return Color.Default;
+    }
+
+    private void CreateNewEntry()
+    {
+        Navigation.NavigateTo("/journals/create");
+    }
+
+    private void ViewEntry(int id)
+    {
+        Navigation.NavigateTo($"/journals/view/{id}");
+    }
+
+    private void EditEntry(int id)
+    {
+        Navigation.NavigateTo($"/journals/edit/{id}");
+    }
+
+    private void DeleteEntry(int id)
+    {
+        JournalService.DeleteEntry(id);
+        LoadEntries();
+        StateHasChanged();
+    }
+}
