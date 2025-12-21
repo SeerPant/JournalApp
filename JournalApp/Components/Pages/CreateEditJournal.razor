@@ -1,0 +1,265 @@
+@page "/journals/create"
+@page "/journals/edit/{Id:int}"
+@using JournalApp.Models
+@using JournalApp.Services
+@inject JournalService JournalService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        @(IsEditMode ? "Edit Journal Entry" : "New Journal Entry")
+    </MudText>
+
+    <MudPaper Class="pa-4">
+        <MudForm @ref="form" @bind-IsValid="@isValid">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudDatePicker Label="Date" 
+                                  @bind-Date="selectedDate"
+                                  Required="true"
+                                  Editable="true"
+                                  MaxDate="DateTime.Today"
+                                  Variant="Variant.Outlined" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField Label="Title" 
+                                 @bind-Value="entry.Title"
+                                 Required="true"
+                                 Counter="100"
+                                 MaxLength="100"
+                                 Variant="Variant.Outlined" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField Label="Content" 
+                                 @bind-Value="entry.Content"
+                                 Required="true"
+                                 Lines="10"
+                                 Variant="Variant.Outlined"
+                                 Placeholder="Write your thoughts..." />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Class="mb-2">Primary Mood</MudText>
+                    <MudRadioGroup T="string" @bind-SelectedOption="entry.PrimaryMood">
+                        @foreach (var category in MoodCategories.Moods)
+                        {
+                            <MudText Typo="Typo.subtitle2" Class="mt-2">@category.Key</MudText>
+                            <MudGrid>
+                                @foreach (var mood in category.Value)
+                                {
+                                    <MudItem xs="6" sm="4" md="3">
+                                        <MudRadio T="string" Option="@mood" Color="GetMoodColor(category.Key)">
+                                            @mood
+                                        </MudRadio>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        }
+                    </MudRadioGroup>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Class="mb-2">Secondary Moods</MudText>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="string"
+                                      Label="Secondary Mood 1" 
+                                      @bind-Value="entry.SecondaryMood1"
+                                      Clearable="true"
+                                      Variant="Variant.Outlined">
+                                <MudSelectItem T="string" Value="@((string?)null)">None</MudSelectItem>
+                                @foreach (var category in MoodCategories.Moods)
+                                {
+                                    <MudSelectItem T="string" Disabled="true">--- @category.Key ---</MudSelectItem>
+                                    @foreach (var mood in category.Value)
+                                    {
+                                        <MudSelectItem T="string" Value="@mood">@mood</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="string"
+                                      Label="Secondary Mood 2" 
+                                      @bind-Value="entry.SecondaryMood2"
+                                      Clearable="true"
+                                      Variant="Variant.Outlined">
+                                <MudSelectItem T="string" Value="@((string?)null)">None</MudSelectItem>
+                                @foreach (var category in MoodCategories.Moods)
+                                {
+                                    <MudSelectItem T="string" Disabled="true">--- @category.Key ---</MudSelectItem>
+                                    @foreach (var mood in category.Value)
+                                    {
+                                        <MudSelectItem T="string" Value="@mood">@mood</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" Class="mb-2">Tags</MudText>
+                    <MudAutocomplete T="string" 
+                                    Label="Add Tags" 
+                                    @bind-Value="currentTag"
+                                    SearchFunc="SearchTags"
+                                    ResetValueOnEmptyText="true"
+                                    CoerceText="true"
+                                    CoerceValue="false"
+                                    Variant="Variant.Outlined"
+                                    AdornmentIcon="@Icons.Material.Filled.Add"
+                                    AdornmentColor="Color.Primary"
+                                    OnAdornmentClick="AddTag" />
+                    
+                    <MudChipSet T="string" Class="mt-2">
+                        @foreach (var tag in entry.Tags)
+                        {
+                            <MudChip T="string"
+                                    Color="Color.Primary" 
+                                    OnClose="@(() => RemoveTag(tag))">
+                                @tag
+                            </MudChip>
+                        }
+                    </MudChipSet>
+                </MudItem>
+
+                <MudItem xs="12" Class="d-flex gap-2">
+                    <MudButton Variant="Variant.Filled" 
+                              Color="Color.Primary"
+                              OnClick="SaveEntry"
+                              Disabled="!isValid">
+                        @(IsEditMode ? "Update" : "Create")
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined" 
+                              Color="Color.Default"
+                              OnClick="Cancel">
+                        Cancel
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private JournalEntry entry = new();
+    private DateTime? selectedDate = DateTime.Today;
+    private MudForm? form;
+    private bool isValid;
+    private string currentTag = string.Empty;
+    private bool IsEditMode => Id.HasValue;
+
+    protected override void OnInitialized()
+    {
+        if (IsEditMode && Id.HasValue)
+        {
+            var existingEntry = JournalService.GetEntryById(Id.Value);
+            if (existingEntry != null)
+            {
+                entry = new JournalEntry
+                {
+                    Id = existingEntry.Id,
+                    Date = existingEntry.Date,
+                    Title = existingEntry.Title,
+                    Content = existingEntry.Content,
+                    PrimaryMood = existingEntry.PrimaryMood,
+                    SecondaryMood1 = existingEntry.SecondaryMood1,
+                    SecondaryMood2 = existingEntry.SecondaryMood2,
+                    Tags = new List<string>(existingEntry.Tags),
+                    CreatedAt = existingEntry.CreatedAt,
+                    UpdatedAt = existingEntry.UpdatedAt
+                };
+                selectedDate = entry.Date;
+            }
+        }
+        else
+        {
+            entry.PrimaryMood = "Happy"; 
+        }
+    }
+
+    private Color GetMoodColor(string category)
+    {
+        return category switch
+        {
+            "Positive" => Color.Success,
+            "Negative" => Color.Error,
+            _ => Color.Default
+        };
+    }
+
+    private Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(value))
+            return Task.FromResult(PrebuiltTags.Tags.AsEnumerable());
+
+        return Task.FromResult(PrebuiltTags.Tags
+            .Where(t => t.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .AsEnumerable());
+    }
+
+    private void AddTag()
+    {
+        if (!string.IsNullOrWhiteSpace(currentTag) && !entry.Tags.Contains(currentTag))
+        {
+            entry.Tags.Add(currentTag);
+            currentTag = string.Empty;
+        }
+    }
+
+    private void RemoveTag(string tag)
+    {
+        entry.Tags.Remove(tag);
+    }
+
+    private async Task SaveEntry()
+    {
+        if (form != null)
+        {
+            await form.Validate();
+            if (!isValid)
+            {
+                Snackbar.Add("Please fill all required fields", Severity.Error);
+                return;
+            }
+        }
+
+        try
+        {
+            entry.Date = selectedDate ?? DateTime.Today;
+
+            if (IsEditMode)
+            {
+                JournalService.UpdateEntry(entry);
+                Snackbar.Add("Journal entry updated successfully!", Severity.Success);
+            }
+            else
+            {
+                JournalService.CreateEntry(entry);
+                Snackbar.Add("Journal entry created successfully!", Severity.Success);
+            }
+
+            Navigation.NavigateTo("/journals");
+        }
+        catch (InvalidOperationException ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Warning);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("An error occurred while saving", Severity.Error);
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/journals");
+    }
+}
