@@ -1,0 +1,96 @@
+# File: .gitignore (place in repository root)
+
+## Visual Studio / VS Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww]in32/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## .NET Core / MAUI
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+## Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+## Build output
+*.dll
+*.exe
+*.pdb
+*.cache
+*.ilk
+*.log
+*.tlog
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+## WebView2
+*.WebView2/
+
+## Mac/iOS
+*.DS_Store
+xcuserdata/
+*.xcworkspace
+
+## Android
+*.apk
+*.aab
+*.dex
+*.class
+
+## Windows
+Thumbs.db
+Desktop.ini
+
+## Rider
+.idea/
+*.sln.iml
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## SQLite databases (optional - uncomment if you don't want to track)
+# *.db
+# *.db-shm
+# *.db-wal
+# *.sqlite
+# *.sqlite3

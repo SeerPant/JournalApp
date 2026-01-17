@@ -6,6 +6,8 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
+@inject IJSRuntime JS
+
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">
         @(IsEditMode ? "Edit Journal Entry" : "New Journal Entry")
@@ -15,30 +17,26 @@
         <MudForm @ref="form" @bind-IsValid="@isValid">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudDatePicker Label="Date" 
-                                  @bind-Date="selectedDate"
+                    <MudDatePicker Label="Date"
+                                   @bind-Date="selectedDate"
+                                   Required="true"
+                                   Editable="true"
+                                   MaxDate="DateTime.Today"
+                                   Variant="Variant.Outlined" />
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudTextField Label="Title"
+                                  @bind-Value="entry.Title"
                                   Required="true"
-                                  Editable="true"
-                                  MaxDate="DateTime.Today"
+                                  Counter="100"
+                                  MaxLength="100"
                                   Variant="Variant.Outlined" />
                 </MudItem>
 
                 <MudItem xs="12">
-                    <MudTextField Label="Title" 
-                                 @bind-Value="entry.Title"
-                                 Required="true"
-                                 Counter="100"
-                                 MaxLength="100"
-                                 Variant="Variant.Outlined" />
-                </MudItem>
-
-                <MudItem xs="12">
-                    <MudTextField Label="Content" 
-                                 @bind-Value="entry.Content"
-                                 Required="true"
-                                 Lines="10"
-                                 Variant="Variant.Outlined"
-                                 Placeholder="Write your thoughts..." />
+                    <MudText Typo="Typo.body1" Class="mb-2" Style="font-weight: 500;">Content*</MudText>
+                    <div id="content" style="height: 400px; background: white; border: 1px solid rgba(0,0,0,0.12); border-radius: 4px;"></div>
                 </MudItem>
 
                 <MudItem xs="12">
@@ -66,10 +64,10 @@
                     <MudGrid>
                         <MudItem xs="12" sm="6">
                             <MudSelect T="string"
-                                      Label="Secondary Mood 1" 
-                                      @bind-Value="entry.SecondaryMood1"
-                                      Clearable="true"
-                                      Variant="Variant.Outlined">
+                                       Label="Secondary Mood 1"
+                                       @bind-Value="entry.SecondaryMood1"
+                                       Clearable="true"
+                                       Variant="Variant.Outlined">
                                 <MudSelectItem T="string" Value="@((string?)null)">None</MudSelectItem>
                                 @foreach (var category in MoodCategories.Moods)
                                 {
@@ -83,10 +81,10 @@
                         </MudItem>
                         <MudItem xs="12" sm="6">
                             <MudSelect T="string"
-                                      Label="Secondary Mood 2" 
-                                      @bind-Value="entry.SecondaryMood2"
-                                      Clearable="true"
-                                      Variant="Variant.Outlined">
+                                       Label="Secondary Mood 2"
+                                       @bind-Value="entry.SecondaryMood2"
+                                       Clearable="true"
+                                       Variant="Variant.Outlined">
                                 <MudSelectItem T="string" Value="@((string?)null)">None</MudSelectItem>
                                 @foreach (var category in MoodCategories.Moods)
                                 {
@@ -103,24 +101,24 @@
 
                 <MudItem xs="12">
                     <MudText Typo="Typo.h6" Class="mb-2">Tags</MudText>
-                    <MudAutocomplete T="string" 
-                                    Label="Add Tags" 
-                                    @bind-Value="currentTag"
-                                    SearchFunc="SearchTags"
-                                    ResetValueOnEmptyText="true"
-                                    CoerceText="true"
-                                    CoerceValue="false"
-                                    Variant="Variant.Outlined"
-                                    AdornmentIcon="@Icons.Material.Filled.Add"
-                                    AdornmentColor="Color.Primary"
-                                    OnAdornmentClick="AddTag" />
-                    
+                    <MudAutocomplete T="string"
+                                     Label="Add Tags"
+                                     @bind-Value="currentTag"
+                                     SearchFunc="SearchTags"
+                                     ResetValueOnEmptyText="true"
+                                     CoerceText="true"
+                                     CoerceValue="false"
+                                     Variant="Variant.Outlined"
+                                     AdornmentIcon="@Icons.Material.Filled.Add"
+                                     AdornmentColor="Color.Primary"
+                                     OnAdornmentClick="AddTag" />
+
                     <MudChipSet T="string" Class="mt-2">
                         @foreach (var tag in entry.Tags)
                         {
                             <MudChip T="string"
-                                    Color="Color.Primary" 
-                                    OnClose="@(() => RemoveTag(tag))">
+                                     Color="Color.Primary"
+                                     OnClose="@(() => RemoveTag(tag))">
                                 @tag
                             </MudChip>
                         }
@@ -128,15 +126,15 @@
                 </MudItem>
 
                 <MudItem xs="12" Class="d-flex gap-2">
-                    <MudButton Variant="Variant.Filled" 
-                              Color="Color.Primary"
-                              OnClick="SaveEntry"
-                              Disabled="!isValid">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="SaveEntry"
+                               Disabled="!isValid">
                         @(IsEditMode ? "Update" : "Create")
                     </MudButton>
-                    <MudButton Variant="Variant.Outlined" 
-                              Color="Color.Default"
-                              OnClick="Cancel">
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Default"
+                               OnClick="Cancel">
                         Cancel
                     </MudButton>
                 </MudItem>
@@ -146,6 +144,24 @@
 </MudContainer>
 
 @code {
+    private bool quillInitialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("initQuill", "content");
+
+            // If editing, set the content
+            if (IsEditMode && !string.IsNullOrEmpty(entry.Content))
+            {
+                await JS.InvokeVoidAsync("setQuillHTML", entry.Content);
+            }
+
+            quillInitialized = true;
+        }
+    }
+
     [Parameter]
     public int? Id { get; set; }
 
@@ -181,7 +197,7 @@
         }
         else
         {
-            entry.PrimaryMood = "Happy"; 
+            entry.PrimaryMood = "Happy";
         }
     }
 
@@ -233,6 +249,12 @@
 
         try
         {
+            // Capture Quill content before saving
+            if (quillInitialized)
+            {
+                entry.Content = await JS.InvokeAsync<string>("getQuillHtml");
+            }
+
             entry.Date = selectedDate ?? DateTime.Today;
 
             if (IsEditMode)
