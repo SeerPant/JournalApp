@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\service\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\service\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\pages\\createeditjournal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\pages\\createeditjournal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -29,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\models\\journalentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\models\\journalentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\service\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|solutionrelative:journalapp\\components\\service\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CA35751A-00EF-F4B0-BE1B-FF35BF942A2F}|JournalApp\\JournalApp.csproj|c:\\personal\\university\\year 3\\.net\\cw y3s1\\journalapp\\journalapp\\journalapp\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -74,7 +74,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -89,8 +89,12 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "quillEditor.js",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\wwwroot\\js\\quillEditor.js",
               "RelativeDocumentMoniker": "JournalApp\\wwwroot\\js\\quillEditor.js",
@@ -103,20 +107,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\wwwroot\\index.html",
               "RelativeDocumentMoniker": "JournalApp\\wwwroot\\index.html",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\wwwroot\\index.html",
               "RelativeToolTip": "JournalApp\\wwwroot\\index.html",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2026-01-14T04:50:54.034Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "CreateEditJournal.razor",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\CreateEditJournal.razor",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Pages\\CreateEditJournal.razor",
@@ -129,7 +133,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "JournalEntryView.razor",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\JournalEntryView.razor",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Pages\\JournalEntryView.razor",
@@ -140,19 +144,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "JournalService.cs",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Service\\JournalService.cs",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Service\\JournalService.cs",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Service\\JournalService.cs",
               "RelativeToolTip": "JournalApp\\Components\\Service\\JournalService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-21T01:45:59.008Z"
+              "WhenOpened": "2025-12-21T01:45:59.008Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "JournalEntry.cs",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Models\\JournalEntry.cs",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Models\\JournalEntry.cs",
@@ -160,7 +165,8 @@
               "RelativeToolTip": "JournalApp\\Components\\Models\\JournalEntry.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-21T01:44:27.178Z"
+              "WhenOpened": "2025-12-21T01:44:27.178Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -170,19 +176,18 @@
               "RelativeDocumentMoniker": "JournalApp\\Components\\Layout\\NavMenu.razor.css",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Layout\\NavMenu.razor.css",
               "RelativeToolTip": "JournalApp\\Components\\Layout\\NavMenu.razor.css",
-              "ViewState": "AgIAAF0AAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2025-12-20T11:40:11.364Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "MainLayout.razor",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Layout\\MainLayout.razor",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Layout\\MainLayout.razor",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Layout\\MainLayout.razor",
               "RelativeToolTip": "JournalApp\\Components\\Layout\\MainLayout.razor",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAIBJwAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-12-20T11:18:43.191Z",
               "EditorCaption": ""
@@ -195,9 +200,10 @@
               "RelativeDocumentMoniker": "JournalApp\\Components\\Layout\\MainLayout.razor.css",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Layout\\MainLayout.razor.css",
               "RelativeToolTip": "JournalApp\\Components\\Layout\\MainLayout.razor.css",
-              "ViewState": "AgIAABsAAAAAAAAAAIBZwE0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAACBjwE0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-12-20T11:18:21.882Z"
+              "WhenOpened": "2025-12-20T11:18:21.882Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -209,7 +215,8 @@
               "RelativeToolTip": "JournalApp\\App.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T11:04:53.468Z"
+              "WhenOpened": "2025-12-20T11:04:53.468Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -219,7 +226,6 @@
               "RelativeDocumentMoniker": "JournalApp\\Components\\Layout\\NavMenu.razor",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Layout\\NavMenu.razor",
               "RelativeToolTip": "JournalApp\\Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAABgAAAAAAAAAAIBJwBYAAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-12-20T10:03:10.647Z"
             },
@@ -233,7 +239,8 @@
               "RelativeToolTip": "JournalApp\\Components\\Pages\\NotFound.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-20T10:02:58.545Z"
+              "WhenOpened": "2025-12-20T10:02:58.545Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -256,7 +263,8 @@
               "RelativeToolTip": "JournalApp\\MauiProgram.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T08:57:08.035Z"
+              "WhenOpened": "2025-12-20T08:57:08.035Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -268,19 +276,21 @@
               "RelativeToolTip": "JournalApp\\Components\\_Imports.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-20T08:45:49.903Z"
+              "WhenOpened": "2025-12-20T08:45:49.903Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Home.razor",
               "DocumentMoniker": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\Home.razor",
               "RelativeDocumentMoniker": "JournalApp\\Components\\Pages\\Home.razor",
               "ToolTip": "C:\\Personal\\University\\Year 3\\.NET\\CW Y3S1\\JournalApp\\JournalApp\\JournalApp\\Components\\Pages\\Home.razor",
               "RelativeToolTip": "JournalApp\\Components\\Pages\\Home.razor",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAADUAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAIBJwDUAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-20T08:40:46.145Z"
+              "WhenOpened": "2025-12-20T08:40:46.145Z",
+              "EditorCaption": ""
             }
           ]
         }

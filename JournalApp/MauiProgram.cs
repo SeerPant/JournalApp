@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
-using JournalApp.Services;
-
+using JournalApp.Components.Service;
+using JournalApp.Components.ViewModels;
 namespace JournalApp
 {
     public static class MauiProgram
@@ -16,7 +16,15 @@ namespace JournalApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            //registering mudblazor service
             builder.Services.AddMauiBlazorWebView();
+            //registering database service
+            builder.Services.AddSingleton<DatabaseService>();
+            //regitering user serivce 
+            builder.Services.AddSingleton<IUserService, UserService>();
+
+            builder.Services.AddSingleton<LoginViewModel>(); 
+            builder.Services.AddSingleton<RegisterViewModel>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
@@ -27,7 +35,7 @@ namespace JournalApp
             builder.Services.AddMudServices();
 
             
-            builder.Services.AddSingleton<JournalService>();
+            //builder.Services.AddSingleton<JournalService>();
 
             return builder.Build();
         }
