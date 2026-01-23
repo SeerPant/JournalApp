@@ -1,7 +1,7 @@
 # File: .gitignore (place in repository root)
 
 ## Visual Studio / VS Code
-.vs/
+.vs
 .vscode/
 *.suo
 *.user

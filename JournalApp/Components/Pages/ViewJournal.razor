@@ -1,8 +1,13 @@
 ﻿@page "/journals/view/{Id:int}"
-@using JournalApp.Models
-@using JournalApp.Services
-@inject JournalService JournalService
+@using JournalApp.Components.Models
+@using JournalApp.Components.Service
+@inject IJournalEntryService JournalService
+@inject MoodService MoodService
+@inject TagService TagService
 @inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+@inject IUserService UserService
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
     @if (entry != null)
@@ -30,7 +35,7 @@
                 <MudItem xs="12" sm="6">
                     <MudText Typo="Typo.body2" Color="Color.Secondary">
                         <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" />
-                        Date: @entry.Date.ToString("MMMM dd, yyyy")
+                        Date: @entry.CreatedAt.ToString("MMMM dd, yyyy")
                     </MudText>
                 </MudItem>
 
@@ -41,12 +46,12 @@
                     </MudText>
                 </MudItem>
 
-                @if (entry.UpdatedAt != entry.CreatedAt)
+                @if (entry.UpdateAt != entry.CreatedAt)
                 {
                     <MudItem xs="12">
                         <MudText Typo="Typo.body2" Color="Color.Secondary">
                             <MudIcon Icon="@Icons.Material.Filled.Update" Size="Size.Small" />
-                            Last Updated: @entry.UpdatedAt.ToString("MMM dd, yyyy h:mm tt")
+                            Last Updated: @entry.UpdateAt.ToString("MMM dd, yyyy h:mm tt")
                         </MudText>
                     </MudItem>
                 }
@@ -58,41 +63,44 @@
                 <MudItem xs="12">
                     <MudText Typo="Typo.h6" Class="mb-2">Mood</MudText>
                     <MudChipSet T="string">
-                        <MudChip T="string"
-                                 Color="GetMoodColor(entry.PrimaryMood)"
-                                 Size="Size.Medium"
-                                 Icon="@Icons.Material.Filled.Mood">
-                            @entry.PrimaryMood (Primary)
-                        </MudChip>
-
-                        @if (!string.IsNullOrEmpty(entry.SecondaryMood1))
+                        @if (entry.PrimaryMoodID.HasValue && primaryMood != null)
                         {
-                            <MudChip T="string" Color="Color.Default" Size="Size.Medium">
-                                @entry.SecondaryMood1
+                            <MudChip T="string"
+                                     Color="GetMoodColor(primaryMood.Category)"
+                                     Size="Size.Medium"
+                                     Icon="@Icons.Material.Filled.Mood">
+                                @primaryMood.MoodName (Primary)
                             </MudChip>
                         }
 
-                        @if (!string.IsNullOrEmpty(entry.SecondaryMood2))
+                        @if (entry.SecondaryMoodFirstID.HasValue && secondaryMood1 != null)
                         {
                             <MudChip T="string" Color="Color.Default" Size="Size.Medium">
-                                @entry.SecondaryMood2
+                                @secondaryMood1.MoodName
+                            </MudChip>
+                        }
+
+                        @if (entry.SecondaryMoodSecondID.HasValue && secondaryMood2 != null)
+                        {
+                            <MudChip T="string" Color="Color.Default" Size="Size.Medium">
+                                @secondaryMood2.MoodName
                             </MudChip>
                         }
                     </MudChipSet>
                 </MudItem>
 
-                @if (entry.Tags.Any())
+                @if (tags.Any())
                 {
                     <MudItem xs="12">
                         <MudText Typo="Typo.h6" Class="mb-2">Tags</MudText>
                         <MudChipSet T="string">
-                            @foreach (var tag in entry.Tags)
+                            @foreach (var tag in tags)
                             {
                                 <MudChip T="string"
                                          Color="Color.Primary"
                                          Size="Size.Small"
                                          Icon="@Icons.Material.Filled.Tag">
-                                    @tag
+                                    @tag.TagName
                                 </MudChip>
                             }
                         </MudChipSet>
@@ -107,7 +115,7 @@
                     <MudText Typo="Typo.h6" Class="mb-3">Content</MudText>
                     <MudPaper Class="pa-4" Elevation="0" Style="background-color: var(--mud-palette-background-grey);">
                         <MudText Typo="Typo.body1" Style="white-space: pre-wrap; line-height: 1.8;">
-                            @entry.Content
+                            @((MarkupString)entry.Content)
                         </MudText>
                     </MudPaper>
                 </MudItem>
@@ -118,7 +126,7 @@
 
                 <MudItem xs="12">
                     <MudText Typo="Typo.body2" Color="Color.Secondary">
-                        Word Count: @GetWordCount(entry.Content)
+                        Word Count: @entry.WordCount
                     </MudText>
                 </MudItem>
 
@@ -159,28 +167,38 @@
     public int Id { get; set; }
 
     private JournalEntry? entry;
+    private Mood? primaryMood;
+    private Mood? secondaryMood1;
+    private Mood? secondaryMood2;
+    private List<Tag> tags = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        entry = JournalService.GetEntryById(Id);
+        entry = await JournalService.GetEntryByIdAsync(Id);
+        
+        if (entry != null)
+        {
+            if (entry.PrimaryMoodID.HasValue)
+                primaryMood = await MoodService.GetMoodByIdAsync(entry.PrimaryMoodID.Value);
+            
+            if (entry.SecondaryMoodFirstID.HasValue)
+                secondaryMood1 = await MoodService.GetMoodByIdAsync(entry.SecondaryMoodFirstID.Value);
+            
+            if (entry.SecondaryMoodSecondID.HasValue)
+                secondaryMood2 = await MoodService.GetMoodByIdAsync(entry.SecondaryMoodSecondID.Value);
+
+            tags = await TagService.GetTagsForEntryAsync(entry.EntryID);
+        }
     }
 
-    private Color GetMoodColor(string mood)
+    private Color GetMoodColor(string category)
     {
-        if (MoodCategories.Moods["Positive"].Contains(mood))
-            return Color.Success;
-        if (MoodCategories.Moods["Negative"].Contains(mood))
-            return Color.Error;
-        return Color.Default;
-    }
-
-    private int GetWordCount(string content)
-    {
-        if (string.IsNullOrWhiteSpace(content))
-            return 0;
-
-        return content.Split(new[] { ' ', '\n', '\r', '\t' },
-            StringSplitOptions.RemoveEmptyEntries).Length;
+        return category switch
+        {
+            "Positive" => Color.Success,
+            "Negative" => Color.Error,
+            _ => Color.Default
+        };
     }
 
     private void BackToList()
@@ -193,9 +211,17 @@
         Navigation.NavigateTo($"/journals/edit/{Id}");
     }
 
-    private void DeleteEntry()
+    private async Task DeleteEntry()
     {
-        JournalService.DeleteEntry(Id);
-        Navigation.NavigateTo("/journals");
+        var result = await JournalService.DeleteEntryAsync(Id);
+        if (result)
+        {
+            Snackbar.Add("Entry deleted successfully", Severity.Success);
+            Navigation.NavigateTo("/journals");
+        }
+        else
+        {
+            Snackbar.Add("Failed to delete entry", Severity.Error);
+        }
     }
 }

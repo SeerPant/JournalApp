@@ -7,7 +7,7 @@ namespace JournalApp.Components.Service
     {   
         //variable to hold connection
         private readonly SQLiteAsyncConnection database;
-
+        private readonly Task _initializationTask;
 
         public DatabaseService()
         {
@@ -16,41 +16,73 @@ namespace JournalApp.Components.Service
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "JournalApp",
                 "JournalApp.db"
-
             );
 
             //create directory if it does not exist
-            Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!); 
+            Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+
+            //if (File.Exists(dbPath))
+            //{
+            //    File.Delete(dbPath);
+            //    System.Diagnostics.Debug.WriteLine("Old database deleted");
+            //}
 
             //initialize sqlite connection 
             database = new SQLiteAsyncConnection(dbPath); 
 
-            //initializeing database tables 
-            InitializeDatabaseAsync().Wait();
+            //initialize database tables asynchronously without blocking
+            _initializationTask = InitializeDatabaseAsync();
+        }
+
+        //method to ensure database is initialized before use
+        public async Task EnsureInitializedAsync()
+        {
+            await _initializationTask;
         }
 
         //method to initialize database 
         private async Task InitializeDatabaseAsync()
         {
-            //create user table 
-            await database.CreateTableAsync<User>();
-            await database.CreateTableAsync<JournalEntry>(); 
-            await database.CreateTableAsync<Mood>(); 
-            await database.CreateTableAsync<Tag>(); 
-            await database.CreateTableAsync<EntryTag>(); 
-            await database.CreateTableAsync<Category>(); 
-            await database.CreateTableAsync<Streak>();
+            try
+            {
+                //create user table 
+                await database.CreateTableAsync<User>();
+                await database.CreateTableAsync<JournalEntry>(); 
+                await database.CreateTableAsync<Mood>(); 
+                await database.CreateTableAsync<Tag>(); 
+                await database.CreateTableAsync<EntryTag>(); 
+                await database.CreateTableAsync<Category>(); 
+                await database.CreateTableAsync<Streak>();
 
-            //seeding predefined data
-            await SeedPredefinedDataAsync();
-                
-            
-            
+                //seeding predefined data
+                await SeedPredefinedDataAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Database initialization error: {ex.Message}");
+                throw;
+            }
         }
 
         //seeding data in database 
         private async Task SeedPredefinedDataAsync()
         {
+            //seed user if user doesnt exist
+            var userCount = await database.Table<User>().CountAsync();
+            if (userCount == 0)
+            {
+                var defaultUser = new User
+                {
+                    userName = "DefaultUser",
+                    pinHash = HashPin("1234"), // Default PIN
+                    CreatedDate = DateTime.Now,
+                    LastLoginDate = DateTime.Now
+                };
+
+                await database.InsertAsync(defaultUser);
+                System.Diagnostics.Debug.WriteLine("Default user created with PIN: 1234");
+            }
+
             // Seed predefined moods if not already present
             var moodCount = await database.Table<Mood>().CountAsync();
             if (moodCount == 0)
@@ -116,11 +148,17 @@ namespace JournalApp.Components.Service
                 await database.InsertAllAsync(predefinedCategories);
             }
         }
-
+        //hashing pin of seeded user
+        private string HashPin(string pin)
+        {
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(pin);
+            var hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
+        }
         public SQLiteAsyncConnection GetConnection()
         {
             return database;
         }
     }
 }
-       

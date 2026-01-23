@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using JournalApp.Components.Service;
-using JournalApp.Components.ViewModels;
+using JournalApp.Components.Models;
 namespace JournalApp
 {
     public static class MauiProgram
     {
         public static MauiApp CreateMauiApp()
         {
+            SQLitePCL.Batteries_V2.Init();
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -22,9 +23,16 @@ namespace JournalApp
             builder.Services.AddSingleton<DatabaseService>();
             //regitering user serivce 
             builder.Services.AddSingleton<IUserService, UserService>();
-
-            builder.Services.AddSingleton<LoginViewModel>(); 
-            builder.Services.AddSingleton<RegisterViewModel>();
+            builder.Services.AddSingleton<IJournalEntryService, JournalEntryService>();
+            //registering mood service 
+            builder.Services.AddSingleton<MoodService>();
+            //registering tag service 
+            builder.Services.AddSingleton<TagService>();
+            //registering category service 
+            builder.Services.AddSingleton<CategoryService>();
+            //registering streak service 
+            builder.Services.AddSingleton<StreakService>();
+            
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
