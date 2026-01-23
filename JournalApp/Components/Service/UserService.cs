@@ -1,148 +1,110 @@
 using JournalApp.Components.Service;
 using JournalApp.Components.Models;
-using Microsoft.Data.Sqlite;
+using SQLite;
 using System; 
 using System.Security.Cryptography; 
 using System.Text; 
-using System.Threading.Tasks;
+
 
 namespace JournalApp.Components.Service
 {
-    public class UserService : IUserService
+    public class UserService: IUserService
     {
-        private readonly DatabaseService _databaseService; 
+        private readonly DatabaseService _databaseService;
 
-        public UserService(DatabaseService databaseService)
+        //getting database connection
+        public UserService (DatabaseService databaseService)
         {
             _databaseService = databaseService;
         }
-
+        
+        //getting list of users
         public async Task<User?> GetUserAsync()
         {
-            using var connection = _databaseService.GetConnection(); 
-            await connection.OpenAsync(); 
+            var db = _databaseService.GetConnection();
+            var users = await db.Table<User>().ToListAsync();
+            return users.FirstOrDefault();
+        }
 
-            var command = connection.CreateCommand(); 
-            //command to get user
-            command.CommandText = "SELECT userID, userName, pinHash, CreatedDate, LastLoginDate FROM Users LIMIT 1";
-
-            using var reader = await command.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
-            {
-                return new User
-                {
-                    userID = reader.GetInt32(0),
-                    userName = reader.GetString(1),
-                    pinHash = reader.GetString(2),
-                    CreatedDate = DateTime.Parse(reader.GetString(3)),
-                    LastLoginDate = DateTime.Parse(reader.GetString(4))
-                };
-            }
-            return null;
-        }   
-
+        //counting users in database
         public async Task<bool> HasUserAsync()
         {
-            using var connection = _databaseService.GetConnection();
-            await connection.OpenAsync(); 
-
-
-            var command = connection.CreateCommand(); 
-            command.CommandText = "SELECT COUNT(*) FROM Users";
-
-            //ExecuteScalar because only 1 object is being returned
-            //and type casting to long integer 'long'
-            var count = (long)(await command.ExecuteScalarAsync()?? 0);
-            return count>0;
+            var db = _databaseService.GetConnection();
+            var count = await db.Table<User>().CountAsync(); 
+            return count > 0;
         }
-        
+
+        //method to hash the pin 
         private string HashPin(string pin)
-        {   
-            //creating sha256 encryption
-            using var sha256 = SHA256.Create();
-            //converting to bytes
-            var bytes = Encoding.UTF8.GetBytes(pin);
-            //hashing the PIN
-            var hash = sha256.ComputeHash(bytes); 
-            //converting to string
+        {
+            using var sha256 = SHA256.Create(); 
+            var bytes = Encoding.UTF8.GetBytes(pin); 
+            var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
-        }
+        } 
+
+        //creating user
         public async Task<bool> CreateUserAsync(string username, string pin)
-        {   
-            //return false, if user exists
-            if (await HasUserAsync()) return false;
-            //return false, if username or pin is invalid
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(pin)) return false;
+        {
+            if (await HasUserAsync()) return false; 
 
-            using var connection = _databaseService.GetConnection(); 
-            await connection.OpenAsync();
+            var user = new User
+            {
+                userName = username, 
+                pinHash = HashPin(pin),
+                CreatedDate = DateTime.Now, LastLoginDate = DateTime.Now
+            };
 
-            var command = connection.CreateCommand();
-            command.CommandText = @"
-                INSERT INTO Users(userName, pinHash, CreatedDate, LastLoginDate) VALUES (@username, @pinHash, @createdDate, @lastLoginDate)";
-                command.Parameters.AddWithValue("@username", username.Trim());
-                //hashing the pin
-                command.Parameters.AddWithValue("@pinHash", HashPin(pin));
-                command.Parameters.AddWithValue("@createdDate", DateTime.Now.ToString("o")); 
-                command.Parameters.AddWithValue("@lastLoginDate",DateTime.Now.ToString("o"));
-
-                await command.ExecuteNonQueryAsync(); 
-                return true;
-        }
-
-        public async Task<bool> ValidatePinAsync(string pin)
-        {   
-            //getting user
-            var user = await GetUserAsync();
-            //check for user
-            if (user == null) return false; 
-            //comparing pin
-            return user.pinHash == HashPin(pin);
-        }
-
-        public async Task<bool> UpdatePinAsync(string oldPin, string newPin)
-        {   
-            //checking if old pin is correct
-            if(!await ValidatePinAsync(oldPin)) return false;
-            //validating new pin
-            if(string.IsNullOrWhiteSpace(newPin)) return false; 
-
-            using var connection = _databaseService.GetConnection(); 
-            await connection.OpenAsync();
-
-            //updating the pin in database
-            var command = connection.CreateCommand(); 
-            command.CommandText = "UPDATE Users SET pinHash = @pinHash WHERE userID = (SELECT userID FROM Users LIMIT 1)";
-            command.Parameters.AddWithValue("@pinHash", HashPin(newPin)); 
-
-            //executing
-            await command.ExecuteNonQueryAsync(); 
+            var db = _databaseService.GetConnection(); 
+            await db.InsertAsync(user); 
             return true;
         }
 
+        //method to validate pin 
+        public async Task<bool> ValidatePinAsync(string pin)
+        {
+            
+            var user = await GetUserAsync(); 
+            if (user == null) return false;
+            return user.pinHash == HashPin(pin);
+
+        }
+
+        //method to update pin 
+        public async Task<bool> UpdatePinAsync(string oldPin, string newPin)
+        {
+            if (!await ValidatePinAsync(oldPin)) return false; 
+
+            var user = await GetUserAsync(); 
+            if (user == null) return false; 
+
+            user.pinHash = HashPin(newPin);
+
+            var db = _databaseService.GetConnection(); 
+            await db.UpdateAsync(user); 
+            return true;
+        }
+
+        //method to update last login time 
         public async Task UpdateLastLoginAsync()
         {
-            using var connection = _databaseService.GetConnection();
-            await connection.OpenAsync(); 
+            var user = await GetUserAsync(); 
+            if (user == null) return; 
 
-            var command = connection.CreateCommand(); 
+            user.LastLoginDate = DateTime.Now; 
 
-            //command to set last login date
-            command.CommandText = "UPDATE Users SET LastLoginDate = @lastLoginDate WHERE userID = (SELECT userID FROM Users LIMIT 1)";
-            command.Parameters.AddWithValue("@lastLoginDate", DateTime.Now.ToString("o"));
-
-            await command.ExecuteNonQueryAsync();
+            var db = _databaseService.GetConnection(); 
+            await db.UpdateAsync(user); 
         }
+
+        //method to delete user  
         public async Task DeleteUserAsync()
         {
-            using var connection = _databaseService.GetConnection();
-            await connection.OpenAsync();
+            var user = await GetUserAsync(); 
+            if (user == null) return; 
 
-            //command to delete user
-            var command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM Users";
-
-            await command.ExecuteNonQueryAsync();
+            var db = _databaseService.GetConnection(); 
+            await db.DeleteAsync(user);
         }
-    }   
+    }
 }
