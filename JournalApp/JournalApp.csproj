@@ -53,5 +53,4 @@
         <PackageReference Include="MudBlazor" Version="8.15.0" />
         <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
     </ItemGroup>
-
 </Project>

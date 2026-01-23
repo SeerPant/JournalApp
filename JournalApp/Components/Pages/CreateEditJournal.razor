@@ -10,6 +10,7 @@
 @inject IUserService UserService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject IJSRuntime JS;
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
     @if (isLoading)
@@ -38,155 +39,150 @@
 
         <MudPaper Class="pa-4">
             <MudForm @ref="form" @bind-IsValid="isValid">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudDatePicker Label="Date"
-                                       @bind-Date="selectedDate"
-                                       Required="true"
-                                       Editable="true"
-                                       MaxDate="DateTime.Today"
-                                       Variant="Variant.Outlined" />
-                    </MudItem>
 
-                    <MudItem xs="12">
-                        <MudTextField Label="Title"
-                                      @bind-Value="entry.Title"
-                                      Required="true"
-                                      Counter="200"
-                                      MaxLength="200"
-                                      Variant="Variant.Outlined" />
-                    </MudItem>
+                <!-- Date -->
+                <MudDatePicker Label="Date"
+                               @bind-Date="selectedDate"
+                               Required="true"
+                               Editable="true"
+                               MaxDate="DateTime.Today"
+                               Variant="Variant.Outlined"
+                               Class="mb-4" />
 
-                    <MudItem xs="12">
-                        <MudTextField Label="Content"
-                                      @bind-Value="entry.Content"
-                                      Required="true"
-                                      Lines="15"
-                                      Variant="Variant.Outlined"
-                                      Placeholder="Write your journal entry here..." />
-                    </MudItem>
+                <!-- Title -->
+                <MudTextField Label="Title"
+                              @bind-Value="entry.Title"
+                              Required="true"
+                              Counter="200"
+                              MaxLength="200"
+                              Variant="Variant.Outlined"
+                              Class="mb-4" />
 
-                    <MudItem xs="12">
-                        <MudText Typo="Typo.h6" Class="mb-2">Primary Mood (Required)</MudText>
-                        <MudRadioGroup T="int?" @bind-SelectedOption="selectedPrimaryMood">
-                            @foreach (var category in moodsByCategory)
-                            {
-                                <MudText Typo="Typo.subtitle2" Class="mt-2" Style="font-weight: 600;">@category.Key</MudText>
-                                <MudGrid>
-                                    @foreach (var mood in category.Value)
-                                    {
-                                        <MudItem xs="6" sm="4" md="3">
-                                            <MudRadio T="int?" Option="@mood.MoodID" Color="GetMoodColor(category.Key)">
-                                                @mood.MoodName
-                                            </MudRadio>
-                                        </MudItem>
-                                    }
-                                </MudGrid>
-                            }
-                        </MudRadioGroup>
-                    </MudItem>
+                <!-- Content -->
+                <div class="mb-4">
+                    <MudText Class="mb-2">Content</MudText>
+                    <div id="quillEditor" style="background:white; height:300px; border: 1px solid #ccc; border-radius: 4px;"></div>
+                </div>
 
-                    <MudItem xs="12">
-                        <MudText Typo="Typo.h6" Class="mb-2">Secondary Moods (Optional)</MudText>
-                        <MudGrid>
-                            <MudItem xs="12" sm="6">
-                                <MudSelect T="int?"
-                                           Label="Secondary Mood 1"
-                                           @bind-Value="selectedSecondaryMood1"
-                                           Clearable="true"
-                                           Variant="Variant.Outlined">
-                                    <MudSelectItem T="int?" Value="@((int?)null)">None</MudSelectItem>
-                                    @foreach (var category in moodsByCategory)
-                                    {
-                                        <MudSelectItem T="int?" Disabled="true">--- @category.Key ---</MudSelectItem>
-                                        @foreach (var mood in category.Value)
-                                        {
-                                            <MudSelectItem T="int?" Value="@((int?)mood.MoodID)">@mood.MoodName</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </MudItem>
-                            <MudItem xs="12" sm="6">
-                                <MudSelect T="int?"
-                                           Label="Secondary Mood 2"
-                                           @bind-Value="selectedSecondaryMood2"
-                                           Clearable="true"
-                                           Variant="Variant.Outlined">
-                                    <MudSelectItem T="int?" Value="@((int?)null)">None</MudSelectItem>
-                                    @foreach (var category in moodsByCategory)
-                                    {
-                                        <MudSelectItem T="int?" Disabled="true">--- @category.Key ---</MudSelectItem>
-                                        @foreach (var mood in category.Value)
-                                        {
-                                            <MudSelectItem T="int?" Value="@((int?)mood.MoodID)">@mood.MoodName</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </MudItem>
-                        </MudGrid>
-                    </MudItem>
+                <!-- Primary Mood -->
+                <div class="mb-4">
+                    <MudText Typo="Typo.h6" Class="mb-2">Primary Mood (Required)</MudText>
+                    <MudRadioGroup T="int?" @bind-SelectedOption="selectedPrimaryMood">
+                        @foreach (var category in moodsByCategory)
+                        {
+                            <MudText Typo="Typo.subtitle2" Class="mt-3 mb-2" Style="font-weight: 600;">@category.Key</MudText>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px;">
+                                @foreach (var mood in category.Value)
+                                {
+                                    <MudRadio T="int?" Option="@mood.MoodID" Color="GetMoodColor(category.Key)">
+                                        @mood.MoodName
+                                    </MudRadio>
+                                }
+                            </div>
+                        }
+                    </MudRadioGroup>
+                </div>
 
-                    <MudItem xs="12">
-                        <MudText Typo="Typo.h6" Class="mb-2">Category (Optional)</MudText>
+                <!-- Secondary Moods -->
+                <div class="mb-4">
+                    <MudText Typo="Typo.h6" Class="mb-2">Secondary Moods (Optional)</MudText>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <MudSelect T="int?"
-                                   Label="Select Category"
-                                   @bind-Value="selectedCategory"
+                                   Label="Secondary Mood 1"
+                                   @bind-Value="selectedSecondaryMood1"
                                    Clearable="true"
                                    Variant="Variant.Outlined">
                             <MudSelectItem T="int?" Value="@((int?)null)">None</MudSelectItem>
-                            @foreach (var category in categories)
+                            @foreach (var category in moodsByCategory)
                             {
-                                <MudSelectItem T="int?" Value="@((int?)category.CategoryID)">@category.CategoryName</MudSelectItem>
+                                <MudSelectItem T="int?" Disabled="true">--- @category.Key ---</MudSelectItem>
+                                @foreach (var mood in category.Value)
+                                {
+                                    <MudSelectItem T="int?" Value="@((int?)mood.MoodID)">@mood.MoodName</MudSelectItem>
+                                }
                             }
                         </MudSelect>
-                    </MudItem>
 
-                    <MudItem xs="12">
-                        <MudText Typo="Typo.h6" Class="mb-2">Tags (Optional)</MudText>
-                        <MudAutocomplete T="Tag"
-                                         Label="Add Tags"
-                                         @bind-Value="currentTag"
-                                         SearchFunc="SearchTags"
-                                         ResetValueOnEmptyText="true"
-                                         ToStringFunc="@(tag => tag?.TagName ?? "")"
-                                         Variant="Variant.Outlined"
-                                         AdornmentIcon="@Icons.Material.Filled.Add"
-                                         AdornmentColor="Color.Primary"
-                                         OnAdornmentClick="AddTag" />
+                        <MudSelect T="int?"
+                                   Label="Secondary Mood 2"
+                                   @bind-Value="selectedSecondaryMood2"
+                                   Clearable="true"
+                                   Variant="Variant.Outlined">
+                            <MudSelectItem T="int?" Value="@((int?)null)">None</MudSelectItem>
+                            @foreach (var category in moodsByCategory)
+                            {
+                                <MudSelectItem T="int?" Disabled="true">--- @category.Key ---</MudSelectItem>
+                                @foreach (var mood in category.Value)
+                                {
+                                    <MudSelectItem T="int?" Value="@((int?)mood.MoodID)">@mood.MoodName</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                </div>
 
-                        <MudChipSet T="string" Class="mt-2">
-                            @foreach (var tag in selectedTags)
-                            {
-                                <MudChip T="string" Color="Color.Primary"
-                                         OnClose="@(() => RemoveTag(tag))">
-                                    @tag.TagName
-                                </MudChip>
-                            }
-                        </MudChipSet>
-                    </MudItem>
+                <!-- Category -->
+                <MudSelect T="int?"
+                           Label="Select Category"
+                           @bind-Value="selectedCategory"
+                           Clearable="true"
+                           Variant="Variant.Outlined"
+                           Class="mb-4">
+                    <MudSelectItem T="int?" Value="@((int?)null)">None</MudSelectItem>
+                    @foreach (var category in categories)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)category.CategoryID)">@category.CategoryName</MudSelectItem>
+                    }
+                </MudSelect>
 
-                    <MudItem xs="12" Class="d-flex gap-2">
-                        <MudButton Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   OnClick="SaveEntry"
-                                   Disabled="@(!isValid || isSaving)">
-                            @if (isSaving)
-                            {
-                                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                            }
-                            else
-                            {
-                                @(IsEditMode ? "Update" : "Create")
-                            }
-                        </MudButton>
-                        <MudButton Variant="Variant.Outlined"
-                                   Color="Color.Default"
-                                   OnClick="Cancel"
-                                   Disabled="@isSaving">
-                            Cancel
-                        </MudButton>
-                    </MudItem>
-                </MudGrid>
+                <!-- Tags -->
+                <div class="mb-4">
+                    <MudText Typo="Typo.h6" Class="mb-2">Tags (Optional)</MudText>
+                    <MudAutocomplete T="Tag"
+                                     Label="Add Tags"
+                                     @bind-Value="currentTag"
+                                     SearchFunc="SearchTags"
+                                     ResetValueOnEmptyText="true"
+                                     ToStringFunc="@(tag => tag?.TagName ?? "")"
+                                     Variant="Variant.Outlined"
+                                     AdornmentIcon="@Icons.Material.Filled.Add"
+                                     AdornmentColor="Color.Primary"
+                                     OnAdornmentClick="AddTag" />
+
+                    <MudChipSet T="string" Class="mt-2">
+                        @foreach (var tag in selectedTags)
+                        {
+                            <MudChip T="string" Color="Color.Primary"
+                                     OnClose="@(() => RemoveTag(tag))">
+                                @tag.TagName
+                            </MudChip>
+                        }
+                    </MudChipSet>
+                </div>
+
+                <!-- Buttons -->
+                <div style="display: flex; gap: 8px;">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="SaveEntry"
+                               Disabled="@(!isValid || isSaving)">
+                        @if (isSaving)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            @(IsEditMode ? "Update" : "Create")
+                        }
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Default"
+                               OnClick="Cancel"
+                               Disabled="@isSaving">
+                        Cancel
+                    </MudButton>
+                </div>
+
             </MudForm>
         </MudPaper>
     }
@@ -219,6 +215,34 @@
     private Tag? currentTag;
 
     private int currentUserId = 1;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("Waiting for DOM to be ready...");
+                await Task.Delay(300);
+
+                System.Diagnostics.Debug.WriteLine("Initializing Quill editor...");
+                await JS.InvokeVoidAsync("initQuill", "quillEditor");
+                System.Diagnostics.Debug.WriteLine("Quill initialized successfully");
+
+                if (IsEditMode && !string.IsNullOrEmpty(entry.Content))
+                {
+                    await Task.Delay(100);
+                    await JS.InvokeVoidAsync("setQuillHTML", entry.Content);
+                    System.Diagnostics.Debug.WriteLine("Content loaded into editor");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Quill initialization error: {ex.Message}");
+                Snackbar.Add($"Failed to initialize editor: {ex.Message}", Severity.Error);
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -362,6 +386,9 @@
 
         try
         {
+            //getting content from quill editor
+            entry.Content = await JS.InvokeAsync<string>("getQuillHTML");
+
             entry.UserID = currentUserId;
             entry.CreatedAt = selectedDate ?? DateTime.Today;
             entry.PrimaryMoodID = selectedPrimaryMood;
@@ -370,9 +397,11 @@
             entry.CategoryID = selectedCategory;
 
             bool success;
+
             if (IsEditMode)
             {
                 success = await JournalService.UpdateEntryAsync(entry);
+
                 if (success)
                 {
                     var existingTags = await TagService.GetTagsForEntryAsync(entry.EntryID);
@@ -399,9 +428,11 @@
             else
             {
                 success = await JournalService.CreateEntryAsync(entry);
+
                 if (success)
                 {
                     var createdEntry = await JournalService.GetEntryByDateAsync(entry.CreatedAt, currentUserId);
+
                     if (createdEntry != null)
                     {
                         foreach (var tag in selectedTags)

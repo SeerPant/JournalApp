@@ -10,9 +10,9 @@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">My Journal Entries</MudText>
-    
-    <MudButton Variant="Variant.Filled" 
-               Color="Color.Primary" 
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
                StartIcon="@Icons.Material.Filled.Add"
                OnClick="CreateNewEntry"
                Class="mb-4">
@@ -38,7 +38,7 @@
                             <MudText Typo="Typo.body2" Class="mb-2">
                                 @GetContentPreview(entry.Content)
                             </MudText>
-                            
+
                             @if (entry.PrimaryMoodID.HasValue)
                             {
                                 var moodName = GetMoodName(entry.PrimaryMoodID.Value);
@@ -49,25 +49,25 @@
                                     </MudChip>
                                 }
                             }
-                            
+
                             <MudText Typo="Typo.caption" Class="mt-2">
                                 @entry.WordCount words
                             </MudText>
                         </MudCardContent>
                         <MudCardActions>
-                            <MudButton Size="Size.Small" 
-                                      Color="Color.Primary" 
-                                      OnClick="@(() => ViewEntry(entry.EntryID))">
+                            <MudButton Size="Size.Small"
+                                       Color="Color.Primary"
+                                       OnClick="@(() => ViewEntry(entry.EntryID))">
                                 View
                             </MudButton>
-                            <MudButton Size="Size.Small" 
-                                      Color="Color.Secondary" 
-                                      OnClick="@(() => EditEntry(entry.EntryID))">
+                            <MudButton Size="Size.Small"
+                                       Color="Color.Secondary"
+                                       OnClick="@(() => EditEntry(entry.EntryID))">
                                 Edit
                             </MudButton>
-                            <MudButton Size="Size.Small" 
-                                      Color="Color.Error" 
-                                      OnClick="@(() => DeleteEntry(entry.EntryID))">
+                            <MudButton Size="Size.Small"
+                                       Color="Color.Error"
+                                       OnClick="@(() => DeleteEntry(entry.EntryID))">
                                 Delete
                             </MudButton>
                         </MudCardActions>
@@ -76,11 +76,11 @@
             }
         </MudGrid>
 
-        <MudPagination Class="mt-4" 
-                      Count="@totalPages" 
-                      Selected="@currentPage" 
-                      SelectedChanged="OnPageChanged"
-                      Color="Color.Primary" />
+        <MudPagination Class="mt-4"
+                       Count="@totalPages"
+                       Selected="@currentPage"
+                       SelectedChanged="OnPageChanged"
+                       Color="Color.Primary" />
     }
     else
     {
@@ -123,12 +123,27 @@
         currentPage = page;
         await LoadEntriesAsync();
     }
-
-    private string GetContentPreview(string content)
+    private string GetContentPreview(string content, int charLimit = 50)
     {
+        if (string.IsNullOrWhiteSpace(content))
+            return "";
+
+        // Remove HTML tags
         var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", string.Empty);
-        return plainText.Length > 100 ? plainText.Substring(0, 100) + "..." : plainText;
+
+        // Decode HTML entities like &nbsp; &amp;
+        plainText = System.Net.WebUtility.HtmlDecode(plainText);
+
+        // Remove extra whitespace
+        plainText = System.Text.RegularExpressions.Regex.Replace(plainText, @"\s+", " ").Trim();
+
+        // Limit by character count
+        if (plainText.Length <= charLimit)
+            return plainText;
+
+        return plainText.Substring(0, charLimit) + "...";
     }
+
 
     private string GetMoodName(int moodId)
     {
