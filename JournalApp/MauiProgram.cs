@@ -23,7 +23,10 @@ namespace JournalApp
             builder.Services.AddSingleton<DatabaseService>();
             //regitering user serivce 
             builder.Services.AddSingleton<IUserService, UserService>();
+            //registering journal entry service
             builder.Services.AddSingleton<IJournalEntryService, JournalEntryService>();
+            //registering analytics service 
+            builder.Services.AddSingleton<AnalyticsService>();
             //registering mood service 
             builder.Services.AddSingleton<MoodService>();
             //registering tag service 
@@ -32,6 +35,7 @@ namespace JournalApp
             builder.Services.AddSingleton<CategoryService>();
             //registering streak service 
             builder.Services.AddSingleton<StreakService>();
+            
             
 
 #if DEBUG

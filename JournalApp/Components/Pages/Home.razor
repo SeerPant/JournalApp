@@ -1,5 +1,4 @@
 ﻿@page "/"
-
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
     <MudPaper Class="pa-8" Elevation="3">
         <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
@@ -9,39 +8,39 @@
         <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-4">
             Document your daily thoughts, track your moods, and reflect on your journey.
         </MudText>
-        
+
         <MudDivider Class="my-4" />
-        
+
         <MudGrid Justify="Justify.Center" Spacing="3">
             <MudItem xs="12" sm="6" md="4">
-                <MudButton Variant="Variant.Filled" 
-                          Color="Color.Primary" 
-                          FullWidth="true"
-                          Size="Size.Large"
-                          StartIcon="@Icons.Material.Filled.Add"
-                          Href="/journals/create">
+                <MudButton Variant="Variant.Filled"
+                           Style="background-color: #38182F; color: white;"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           Href="/journals/create">
                     New Entry
                 </MudButton>
             </MudItem>
             <MudItem xs="12" sm="6" md="4">
-                <MudButton Variant="Variant.Outlined" 
-                          Color="Color.Primary" 
-                          FullWidth="true"
-                          Size="Size.Large"
-                          StartIcon="@Icons.Material.Filled.Book"
-                          Href="/journals">
+                <MudButton Variant="Variant.Outlined"
+                           Style="border-color: #38182F; color: #38182F;"
+                           FullWidth="true"
+                           Size="Size.Large"
+                           StartIcon="@Icons.Material.Filled.Book"
+                           Href="/journals">
                     View Journals
                 </MudButton>
             </MudItem>
         </MudGrid>
-        
+
         <MudDivider Class="my-6" />
-        
+
         <MudText Typo="Typo.h6" Class="mb-3">Features</MudText>
         <MudGrid>
             <MudItem xs="12" sm="6">
                 <MudPaper Class="pa-3" Elevation="0">
-                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                    <MudText Typo="Typo.subtitle2" Style="color: #38182F;">
                         <MudIcon Icon="@Icons.Material.Filled.Mood" Size="Size.Small" /> Mood Tracking
                     </MudText>
                     <MudText Typo="Typo.body2">Track your emotions with primary and secondary moods</MudText>
@@ -49,7 +48,7 @@
             </MudItem>
             <MudItem xs="12" sm="6">
                 <MudPaper Class="pa-3" Elevation="0">
-                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                    <MudText Typo="Typo.subtitle2" Style="color: #38182F;">
                         <MudIcon Icon="@Icons.Material.Filled.Tag" Size="Size.Small" /> Smart Tags
                     </MudText>
                     <MudText Typo="Typo.body2">Organize entries with custom and pre-built tags</MudText>
@@ -57,7 +56,7 @@
             </MudItem>
             <MudItem xs="12" sm="6">
                 <MudPaper Class="pa-3" Elevation="0">
-                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                    <MudText Typo="Typo.subtitle2" Style="color: #38182F;">
                         <MudIcon Icon="@Icons.Material.Filled.CalendarToday" Size="Size.Small" /> Daily Entries
                     </MudText>
                     <MudText Typo="Typo.body2">One entry per day</MudText>
@@ -65,7 +64,7 @@
             </MudItem>
             <MudItem xs="12" sm="6">
                 <MudPaper Class="pa-3" Elevation="0">
-                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">
+                    <MudText Typo="Typo.subtitle2" Style="color: #38182F;">
                         <MudIcon Icon="@Icons.Material.Filled.Search" Size="Size.Small" /> Search & Filter
                     </MudText>
                     <MudText Typo="Typo.body2">Find entries by content, date, mood, or tags</MudText>

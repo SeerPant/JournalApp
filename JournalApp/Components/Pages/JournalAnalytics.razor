@@ -1,0 +1,139 @@
+@page "/analytics"
+@using JournalApp.Components.Service
+@using JournalApp.Components.Models
+@inject StreakService StreakService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4" Style="color: #30364F; font-weight: bold;">
+        Analytics Dashboard
+    </MudText>
+
+    @if (isLoading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        <!-- Streak Card -->
+        <MudCard Elevation="3" Class="mb-4">
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h5" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                            Your Journaling Streak
+                        </MudText>
+                    </MudItem>
+
+                    <!-- Current Streak -->
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudPaper Elevation="0" Class="pa-4 text-center" Style="background-color: #F8F9FA; border-radius: 8px;">
+                            <MudText Typo="Typo.h3" Style="color: #30364F; font-weight: bold;">
+                                @streak.CurrentStreak
+                            </MudText>
+                            <MudText Typo="Typo.body2" Style="color: #6C757D;">
+                                Current Streak
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <!-- Longest Streak -->
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudPaper Elevation="0" Class="pa-4 text-center" Style="background-color: #F8F9FA; border-radius: 8px;">
+                            <MudText Typo="Typo.h3" Style="color: #30364F; font-weight: bold;">
+                                @streak.LongestStreak
+                            </MudText>
+                            <MudText Typo="Typo.body2" Style="color: #6C757D;">
+                                Longest Streak
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <!-- Total Entries -->
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudPaper Elevation="0" Class="pa-4 text-center" Style="background-color: #F8F9FA; border-radius: 8px;">
+                            <MudText Typo="Typo.h3" Style="color: #30364F; font-weight: bold;">
+                                @streak.TotalEntries
+                            </MudText>
+                            <MudText Typo="Typo.body2" Style="color: #6C757D;">
+                                Total Entries
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <!-- Missed Days -->
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudPaper Elevation="0" Class="pa-4 text-center" Style="background-color: #F8F9FA; border-radius: 8px;">
+                            <MudText Typo="Typo.h3" Style="color: #30364F; font-weight: bold;">
+                                @streak.MissedDays
+                            </MudText>
+                            <MudText Typo="Typo.body2" Style="color: #6C757D;">
+                                Missed Days
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <!-- Last Entry Date -->
+                    <MudItem xs="12" Class="mt-4">
+                        <MudDivider />
+                    </MudItem>
+
+                    <MudItem xs="12" Class="mt-2">
+                        <MudText Typo="Typo.body1" Style="color: #30364F;">
+                            Last Entry: 
+                            <strong>
+                                @if (streak.LastEntryDate.HasValue)
+                                {
+                                    @streak.LastEntryDate.Value.ToString("MMMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <text>No entries yet</text>
+                                }
+                            </strong>
+                        </MudText>
+                    </MudItem>
+
+                    
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    }
+</MudContainer>
+
+@code {
+    private Streak streak = new Streak();
+    private bool isLoading = true;
+    private int currentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            
+            currentUserId = 1; 
+            await LoadStreakData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading analytics: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadStreakData()
+    {
+        streak = await StreakService.GetOrCreateStreakAsync(currentUserId);
+        
+        
+        var calculatedMissedDays = await StreakService.CalculateMissedDaysAsync(currentUserId);
+        if (calculatedMissedDays != streak.MissedDays)
+        {
+            streak.MissedDays = calculatedMissedDays;
+        }
+    }
+
+    
+}

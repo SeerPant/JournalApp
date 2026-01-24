@@ -5,14 +5,23 @@
 @inject IUserService UserService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-
 @inject IJournalEntryService JournalService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">My Journal Entries</MudText>
 
+    <!-- Search Bar -->
+    <MudTextField @bind-Value="searchKeyword"
+                  Label="Search journals"
+                  Placeholder="Search by title or content..."
+                  Variant="Variant.Outlined"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@Icons.Material.Filled.Search"
+                  OnAdornmentClick="SearchEntries"
+                  Class="mb-4" />
+
     <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
+               Style="Background-Color: #38182F; color: white;"
                StartIcon="@Icons.Material.Filled.Add"
                OnClick="CreateNewEntry"
                Class="mb-4">
@@ -44,7 +53,7 @@
                                 var moodName = GetMoodName(entry.PrimaryMoodID.Value);
                                 if (!string.IsNullOrEmpty(moodName))
                                 {
-                                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">
+                                    <MudChip T="string" Size="Size.Small" Style="background-color:#38182F; color: White">
                                         @moodName
                                     </MudChip>
                                 }
@@ -56,17 +65,17 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Size="Size.Small"
-                                       Color="Color.Primary"
+                                       Style="background-color:#330036; color: white; margin-right: 8px;"
                                        OnClick="@(() => ViewEntry(entry.EntryID))">
                                 View
                             </MudButton>
                             <MudButton Size="Size.Small"
-                                       Color="Color.Secondary"
+                                       Style="background-color:#330036; color: white; margin-right: 8px;"
                                        OnClick="@(() => EditEntry(entry.EntryID))">
                                 Edit
                             </MudButton>
                             <MudButton Size="Size.Small"
-                                       Color="Color.Error"
+                                       Style="background-color: red; color: white"
                                        OnClick="@(() => DeleteEntry(entry.EntryID))">
                                 Delete
                             </MudButton>
@@ -79,16 +88,27 @@
         <MudPagination Class="mt-4"
                        Count="@totalPages"
                        Selected="@currentPage"
-                       SelectedChanged="OnPageChanged"
-                       Color="Color.Primary" />
+                       SelectedChanged="OnPageChanged" />
     }
     else
     {
         <MudAlert Severity="Severity.Info">
-            No journal entries yet. Create your first entry!
+            No journal entries found.
         </MudAlert>
     }
 </MudContainer>
+
+<style>
+    .mud-pagination .mud-pagination-item.mud-selected {
+        background-color: #38182F !important;
+        color: white !important;
+    }
+
+    .mud-pagination .mud-button-root.mud-selected {
+        background-color: #38182F !important;
+        color: white !important;
+    }
+</style>
 
 @code {
     private List<JournalEntry> entries = new();
@@ -97,6 +117,7 @@
     private int pageSize = 6;
     private int totalPages = 1;
     private int currentUserId = 1;
+    private string searchKeyword = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,32 +139,38 @@
         StateHasChanged();
     }
 
+    private async Task SearchEntries()
+    {
+        if (!string.IsNullOrWhiteSpace(searchKeyword))
+        {
+            entries = await JournalService.SearchEntriesAsync(currentUserId, searchKeyword);
+        }
+        else
+        {
+            await LoadEntriesAsync();
+        }
+    }
+
     private async Task OnPageChanged(int page)
     {
         currentPage = page;
         await LoadEntriesAsync();
     }
+
     private string GetContentPreview(string content, int charLimit = 50)
     {
         if (string.IsNullOrWhiteSpace(content))
             return "";
 
-        // Remove HTML tags
         var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", string.Empty);
-
-        // Decode HTML entities like &nbsp; &amp;
         plainText = System.Net.WebUtility.HtmlDecode(plainText);
-
-        // Remove extra whitespace
         plainText = System.Text.RegularExpressions.Regex.Replace(plainText, @"\s+", " ").Trim();
 
-        // Limit by character count
         if (plainText.Length <= charLimit)
             return plainText;
 
         return plainText.Substring(0, charLimit) + "...";
     }
-
 
     private string GetMoodName(int moodId)
     {

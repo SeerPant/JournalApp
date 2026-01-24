@@ -11,6 +11,7 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject IJSRuntime JS;
+@inject StreakService StreakService
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
     @if (isLoading)
@@ -422,6 +423,8 @@
                         }
                     }
 
+                    await StreakService.UpdateStreakAsync(currentUserId);
+
                     Snackbar.Add("Journal entry updated successfully!", Severity.Success);
                 }
             }
@@ -440,6 +443,8 @@
                             await TagService.AddTagToEntryAsync(createdEntry.EntryID, tag.TagID);
                         }
                     }
+
+                    await StreakService.UpdateStreakAsync(currentUserId);
 
                     Snackbar.Add("Journal entry created successfully!", Severity.Success);
                 }

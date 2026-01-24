@@ -6,9 +6,9 @@ namespace JournalApp.Components.Service
     public class StreakService
     {
         private readonly DatabaseService _databaseService;
-        private readonly JournalEntryService _journalEntryService;
+        private readonly IJournalEntryService _journalEntryService;
 
-        public StreakService(DatabaseService databaseService, JournalEntryService journalEntryService)
+        public StreakService(DatabaseService databaseService, IJournalEntryService journalEntryService)
         {
             _databaseService = databaseService;
             _journalEntryService = journalEntryService;
