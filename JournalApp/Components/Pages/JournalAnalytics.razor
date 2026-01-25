@@ -2,6 +2,8 @@
 @using JournalApp.Components.Service
 @using JournalApp.Components.Models
 @inject StreakService StreakService
+@inject AnalyticsService AnalyticsService
+@inject IJSRuntime JS
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4" Style="color: #30364F; font-weight: bold;">
@@ -98,20 +100,106 @@
             </MudCardContent>
         </MudCard>
     }
+    <!--Charts-->
+    <MudGrid Class="mt-4">
+        <!--Mood distribtuion-->
+        <MudItem xs="12" md="6">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Mood Distribution
+                    </MudText>
+                    <canvas id="moodChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Most Frequent Moods Chart -->
+        <MudItem xs="12" md="6">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Most frequent moods
+                    </MudText>
+                    <canvas id="frequentMoodsChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!--entries for month-->
+        <MudItem xs="12" md="6">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Entries by Month
+                    </MudText>
+                    <canvas id="entriesChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!--wordcount trends-->
+        <MudItem xs="12">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Word Count Trends (Last 30 Days)
+                    </MudText>
+                    <canvas id="wordCountChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!--most used tags-->
+        <MudItem xs="12" md="6">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Most Used Tags
+                    </MudText>
+                    <canvas id="tagsChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!--Mood category-->
+        <MudItem xs="12" md="6">
+            <MudCard Elevation="3">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Style="color: #30364F; font-weight: 600;" Class="mb-3">
+                        Mood Categories
+                    </MudText>
+                    <canvas id="categoryChart" style="max-height: 300px;"></canvas>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
 </MudContainer>
 
 @code {
     private Streak streak = new Streak();
     private bool isLoading = true;
     private int currentUserId;
+    private bool loadCharts = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !loadCharts)
+        {
+            loadCharts = true;
+            await LoadCharts();
+        }
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            
+
             currentUserId = 1; 
             await LoadStreakData();
+            //await LoadCharts();
         }
         catch (Exception ex)
         {
@@ -123,17 +211,105 @@
         }
     }
 
+    
     private async Task LoadStreakData()
-    {
+    {   
+        //calculating streak
         streak = await StreakService.GetOrCreateStreakAsync(currentUserId);
-        
-        
+
+
         var calculatedMissedDays = await StreakService.CalculateMissedDaysAsync(currentUserId);
         if (calculatedMissedDays != streak.MissedDays)
         {
             streak.MissedDays = calculatedMissedDays;
         }
     }
+
+    private async Task LoadCharts()
+    {   
+        //chart for mood distribtuion
+        var moodCount = await AnalyticsService.GetMoodDistributionAsync(currentUserId);
+        if (moodCount.Any())
+        {
+            await JS.InvokeVoidAsync("createChart", "moodChart", "bar", moodCount.Keys.ToArray(), moodCount.Values.ToArray());   
+        }
+
+        //chart for most frequent mood 
+        var moodFreq = await AnalyticsService.GetMostFrequentMoodsAsync(currentUserId);
+        if (moodFreq.Any())
+        {
+
+            await JS.InvokeVoidAsync("createChart", "frequentMoodsChart", "pie", 
+            moodFreq.Select(m => m.moodName).ToArray(), 
+            moodFreq.Select(m =>m.count).ToArray());
+        }
+
+        //chart for most used tags
+        // var tags = await AnalyticsService.GetTagBreakdownAsync(currentUserId, 10);
+        // if (tags.Any())
+        // {
+        //     await JS.InvokeVoidAsync("createChart", "tagsChart", "bar",
+        //     tags.Select(t => t.tagName).ToArray(), 
+        //     tags.Select(t => t.count).ToArray());    
+        // }
+        //chart for most used tags
+        // Console.WriteLine("=== LoadCharts started ===");
+        // var tags = await AnalyticsService.GetTagBreakdownAsync(currentUserId, 10);
+        // Console.WriteLine($"Tags count: {tags.Count}");
+
+        // if (tags.Any())
+        // {
+        //     Console.WriteLine("Tags found, creating chart...");
+        //     foreach (var tag in tags)
+        //     {
+        //         Console.WriteLine($"Tag: {tag.tagName}, Count: {tag.count}");
+        //     }
+
+        //     await JS.InvokeVoidAsync("createChart", "tagsChart", "bar",
+        //     tags.Select(t => t.tagName).ToArray(),
+        //     tags.Select(t => t.count).ToArray());
+        // }
+        // else
+        // {
+        //     Console.WriteLine("No tags found for user");
+        // }
+
+        // Entries by Month
+        var entriesByMonth = await AnalyticsService.GetEntriesByMonthAsync(currentUserId, 6);
+        if (entriesByMonth.Any())
+        {
+            await JS.InvokeVoidAsync("createChart", "entriesChart", "bar",
+            entriesByMonth.Keys.ToArray(),
+            entriesByMonth.Values.ToArray());
+        }
+
+        // Word Count Trends
+        var wordCountTrends = await AnalyticsService.GetWordCountTrendsAsync(currentUserId, 30);
+        if (wordCountTrends.Any())
+        {
+            await JS.InvokeVoidAsync("createChart", "wordCountChart", "line",
+            wordCountTrends.Keys.Select(d => d.ToString("MMM dd")).ToArray(),
+            wordCountTrends.Values.ToArray());
+        }
+
+        var tags = await AnalyticsService.GetTagBreakdownAsync(currentUserId, 10);
+        if (tags.Any())
+        {
+            await JS.InvokeVoidAsync("createChart", "tagsChart", "pie",
+            tags.Select(t => t.tagName).ToArray(),
+            tags.Select(t => t.count).ToArray());
+        }
+
+        var moodCategories = await AnalyticsService.GetMoodCategoryDistributionAsync(currentUserId);
+        if (moodCategories.Any())
+        {
+            await JS.InvokeVoidAsync("createChart", "categoryChart", "pie",
+            moodCategories.Keys.ToArray(),
+            moodCategories.Values.ToArray());
+        }
+    }
+
+
 
     
 }

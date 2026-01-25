@@ -20,6 +20,30 @@
                   OnAdornmentClick="SearchEntries"
                   Class="mb-4" />
 
+    <!-- Date Filter -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" sm="5">
+            <MudDatePicker Label="Start Date"
+                           @bind-Date="startDate"
+                           Variant="Variant.Outlined"
+                           Clearable="true" />
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudDatePicker Label="End Date"
+                           @bind-Date="endDate"
+                           Variant="Variant.Outlined"
+                           Clearable="true" />
+        </MudItem>
+        <MudItem xs="12" sm="2" Class="d-flex align-end">
+            <MudButton Variant="Variant.Filled"
+                       Style="Background-Color: #38182F; color: white;"
+                       FullWidth="true"
+                       OnClick="FilterByDate">
+                Filter
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
     <MudButton Variant="Variant.Filled"
                Style="Background-Color: #38182F; color: white;"
                StartIcon="@Icons.Material.Filled.Add"
@@ -118,6 +142,8 @@
     private int totalPages = 1;
     private int currentUserId = 1;
     private string searchKeyword = string.Empty;
+    private DateTime? startDate;
+    private DateTime? endDate;
 
     protected override async Task OnInitializedAsync()
     {
@@ -151,6 +177,23 @@
         }
     }
 
+    private async Task FilterByDate()
+    {
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            entries = await JournalService.GetEntriesByDateRangeAsync(currentUserId, startDate.Value, endDate.Value);
+            Snackbar.Add($"Filtered entries from {startDate.Value:MMM dd, yyyy} to {endDate.Value:MMM dd, yyyy}", Severity.Info);
+        }
+        else if (startDate.HasValue || endDate.HasValue)
+        {
+            Snackbar.Add("Please select both start and end dates", Severity.Warning);
+        }
+        else
+        {
+            await LoadEntriesAsync();
+        }
+    }
+
     private async Task OnPageChanged(int page)
     {
         currentPage = page;
@@ -162,14 +205,11 @@
         if (string.IsNullOrWhiteSpace(content))
             return "";
 
-        var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<.*?>", string.Empty);
-        plainText = System.Net.WebUtility.HtmlDecode(plainText);
-        plainText = System.Text.RegularExpressions.Regex.Replace(plainText, @"\s+", " ").Trim();
+        
+        var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<[^>]*>", "");
+        plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
 
-        if (plainText.Length <= charLimit)
-            return plainText;
-
-        return plainText.Substring(0, charLimit) + "...";
+        return plainText.Length <= charLimit ? plainText : plainText.Substring(0, charLimit);
     }
 
     private string GetMoodName(int moodId)

@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/home"
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8">
     <MudPaper Class="pa-8" Elevation="3">
         <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
@@ -73,3 +73,25 @@
         </MudGrid>
     </MudPaper>
 </MudContainer>
+
+@code{
+    [Inject] private NavigationManager NavManager { get; set; }
+    [Inject] private IUserService UserService { get; set; }
+
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user needs to authenticate
+        var user = await UserService.GetUserAsync();
+        if (user != null)
+        {
+            
+            isAuthenticated = true;
+        }
+        else
+        {
+            NavManager.NavigateTo("/pin");
+        }
+    }
+}

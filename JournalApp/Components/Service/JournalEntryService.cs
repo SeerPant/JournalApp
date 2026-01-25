@@ -112,7 +112,7 @@ namespace JournalApp.Components.Service
             return true;
         }
 
-        //searching entries by title/content 
+        //searching entries by content 
         public async Task<List<JournalEntry>> SearchEntriesAsync(int userID, string keyword)
         {
             var db = _databaseService.GetConnection();

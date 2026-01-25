@@ -41,7 +41,7 @@
         <MudPaper Class="pa-4">
             <MudForm @ref="form" @bind-IsValid="isValid">
 
-                <!-- Date -->
+                
                 <MudDatePicker Label="Date"
                                @bind-Date="selectedDate"
                                Required="true"
@@ -50,7 +50,7 @@
                                Variant="Variant.Outlined"
                                Class="mb-4" />
 
-                <!-- Title -->
+                
                 <MudTextField Label="Title"
                               @bind-Value="entry.Title"
                               Required="true"
@@ -59,13 +59,13 @@
                               Variant="Variant.Outlined"
                               Class="mb-4" />
 
-                <!-- Content -->
+                
                 <div class="mb-4">
                     <MudText Class="mb-2">Content</MudText>
                     <div id="quillEditor" style="background:white; height:300px; border: 1px solid #ccc; border-radius: 4px;"></div>
                 </div>
 
-                <!-- Primary Mood -->
+                
                 <div class="mb-4">
                     <MudText Typo="Typo.h6" Class="mb-2">Primary Mood (Required)</MudText>
                     <MudRadioGroup T="int?" @bind-SelectedOption="selectedPrimaryMood">
@@ -84,7 +84,7 @@
                     </MudRadioGroup>
                 </div>
 
-                <!-- Secondary Moods -->
+                
                 <div class="mb-4">
                     <MudText Typo="Typo.h6" Class="mb-2">Secondary Moods (Optional)</MudText>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -122,7 +122,7 @@
                     </div>
                 </div>
 
-                <!-- Category -->
+                
                 <MudSelect T="int?"
                            Label="Select Category"
                            @bind-Value="selectedCategory"
@@ -136,7 +136,7 @@
                     }
                 </MudSelect>
 
-                <!-- Tags -->
+                
                 <div class="mb-4">
                     <MudText Typo="Typo.h6" Class="mb-2">Tags (Optional)</MudText>
                     <MudAutocomplete T="Tag"
@@ -161,7 +161,7 @@
                     </MudChipSet>
                 </div>
 
-                <!-- Buttons -->
+                
                 <div style="display: flex; gap: 8px;">
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"

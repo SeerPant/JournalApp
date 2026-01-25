@@ -1,0 +1,91 @@
+﻿@page "/"
+@layout EmptyLayout
+@using JournalApp.Components.Service
+@using JournalApp.Components.Models
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center justify-center" Style="min-height: 600px; padding-top: 200px;">
+    <MudCard Elevation="3" Style="width: 400px;">
+        <MudCardContent Class="pa-8">
+            <!-- App Title -->
+            <MudText Typo="Typo.h4" Align="Align.Center" Style="color: #6A605C; font-weight: bold; margin-bottom: 40px;">
+                JournalApp
+            </MudText>
+
+            <!-- PIN Input -->
+            <MudTextField @bind-Value="pin"
+                          Label="Enter PIN"
+                          Variant="Variant.Outlined"
+                          InputType="@inputType"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@passwordIcon"
+                          OnAdornmentClick="TogglePasswordVisibility"
+                          OnKeyDown="HandleKeyDown"
+                          Style="--mud-palette-primary: #6A605C; margin-bottom: 20px;"
+                          AutoFocus="true" />
+
+            <!-- Error Message -->
+            @if (showError)
+            {
+                <MudAlert Severity="Severity.Error" Style="margin-bottom: 20px;">
+                    Invalid PIN. Please try again.
+                </MudAlert>
+            }
+
+            <!-- Enter Button -->
+            <MudButton Variant="Variant.Filled"
+                       FullWidth="true"
+                       Size="Size.Large"
+                       OnClick="ValidatePin"
+                       Style="background-color: #6A605C; color: white;">
+                Enter
+            </MudButton>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private string pin = string.Empty;
+    private bool showError = false;
+    private bool showPassword = false;
+    private InputType inputType = InputType.Password;
+    private string passwordIcon = Icons.Material.Filled.Visibility;
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+        inputType = showPassword ? InputType.Text : InputType.Password;
+        passwordIcon = showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility;
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await ValidatePin();
+        }
+    }
+
+    private async Task ValidatePin()
+    {
+        if (string.IsNullOrWhiteSpace(pin))
+        {
+            showError = true;
+            return;
+        }
+
+        var isValid = await UserService.ValidatePinAsync(pin);
+
+        if (isValid)
+        {
+            await UserService.UpdateLastLoginAsync();
+            NavigationManager.NavigateTo("/home");
+        }
+        else
+        {
+            showError = true;
+            pin = string.Empty;
+        }
+    }
+}
