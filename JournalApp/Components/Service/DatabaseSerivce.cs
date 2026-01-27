@@ -21,12 +21,6 @@ namespace JournalApp.Components.Service
             //create directory if it does not exist
             Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
 
-            //if (File.Exists(dbPath))
-            //{
-            //    File.Delete(dbPath);
-            //    System.Diagnostics.Debug.WriteLine("Old database deleted");
-            //}
-
             //initialize sqlite connection 
             database = new SQLiteAsyncConnection(dbPath); 
 

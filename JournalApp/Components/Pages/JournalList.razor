@@ -6,6 +6,11 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject IJournalEntryService JournalService
+@using QuestPDF.Fluent
+@using QuestPDF.Infrastructure
+@using MudSize = MudBlazor.Size
+@using MudColor = MudBlazor.Color
+@* @using static QuestPDF.Infrastructure.PageSizes *@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">My Journal Entries</MudText>
@@ -44,13 +49,33 @@
         </MudItem>
     </MudGrid>
 
-    <MudButton Variant="Variant.Filled"
-               Style="Background-Color: #38182F; color: white;"
-               StartIcon="@Icons.Material.Filled.Add"
-               OnClick="CreateNewEntry"
-               Class="mb-4">
-        New Entry
-    </MudButton>
+    <div class="d-flex gap-2 mb-4">
+        <MudButton Variant="Variant.Filled"
+                   Style="Background-Color: #38182F; color: white;"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateNewEntry">
+            New Entry
+        </MudButton>
+
+        @if (showExpButton)
+        {
+            <MudButton Variant="Variant.Filled"
+                       Style="Background-Color: #4CAF50; color: white;"
+                       StartIcon="@Icons.Material.Filled.Download"
+                       OnClick="ExportToPDF"
+                       Disabled="isExporting">
+                @if (isExporting)
+                {
+                    <MudProgressCircular Size="MudSize.Small" Indeterminate="true" />
+                    <span class="ml-2">Exporting...</span>
+                }
+                else
+                {
+                    <span>Export to PDF</span>
+                }
+            </MudButton>
+        }
+    </div>
 
     @if (entries.Any())
     {
@@ -62,7 +87,7 @@
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.h6">@entry.Title</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                <MudText Typo="Typo.body2" Color="MudColor.Secondary">
                                     @entry.CreatedAt.ToString("MMM dd, yyyy")
                                 </MudText>
                             </CardHeaderContent>
@@ -77,7 +102,7 @@
                                 var moodName = GetMoodName(entry.PrimaryMoodID.Value);
                                 if (!string.IsNullOrEmpty(moodName))
                                 {
-                                    <MudChip T="string" Size="Size.Small" Style="background-color:#38182F; color: White">
+                                    <MudChip T="string" Size="MudSize.Small" Style="background-color:#38182F; color: White">
                                         @moodName
                                     </MudChip>
                                 }
@@ -88,17 +113,17 @@
                             </MudText>
                         </MudCardContent>
                         <MudCardActions>
-                            <MudButton Size="Size.Small"
+                            <MudButton Size="MudSize.Small"
                                        Style="background-color:#330036; color: white; margin-right: 8px;"
                                        OnClick="@(() => ViewEntry(entry.EntryID))">
                                 View
                             </MudButton>
-                            <MudButton Size="Size.Small"
+                            <MudButton Size="MudSize.Small"
                                        Style="background-color:#330036; color: white; margin-right: 8px;"
                                        OnClick="@(() => EditEntry(entry.EntryID))">
                                 Edit
                             </MudButton>
-                            <MudButton Size="Size.Small"
+                            <MudButton Size="MudSize.Small"
                                        Style="background-color: red; color: white"
                                        OnClick="@(() => DeleteEntry(entry.EntryID))">
                                 Delete
@@ -144,6 +169,9 @@
     private string searchKeyword = string.Empty;
     private DateTime? startDate;
     private DateTime? endDate;
+    private List<JournalEntry> filteredEntries = new();
+    private bool showExpButton = false;
+    private bool isExporting = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -182,6 +210,8 @@
         if (startDate.HasValue && endDate.HasValue)
         {
             entries = await JournalService.GetEntriesByDateRangeAsync(currentUserId, startDate.Value, endDate.Value);
+            filteredEntries = entries;
+            showExpButton = true;
             Snackbar.Add($"Filtered entries from {startDate.Value:MMM dd, yyyy} to {endDate.Value:MMM dd, yyyy}", Severity.Info);
         }
         else if (startDate.HasValue || endDate.HasValue)
@@ -191,6 +221,7 @@
         else
         {
             await LoadEntriesAsync();
+            showExpButton = false;
         }
     }
 
@@ -205,7 +236,6 @@
         if (string.IsNullOrWhiteSpace(content))
             return "";
 
-        
         var plainText = System.Text.RegularExpressions.Regex.Replace(content, "<[^>]*>", "");
         plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
 
@@ -245,5 +275,128 @@
         {
             Snackbar.Add("Failed to delete entry", Severity.Error);
         }
+    }
+
+    private byte[] GeneratePDF(List<JournalEntry> entriesToExport)
+    {
+        using var stream = new MemoryStream();
+
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        QuestPDF.Fluent.Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(QuestPDF.Helpers.PageSizes.A4);
+                page.Margin(2, Unit.Centimetre);
+                page.PageColor("#FFFFFF");
+                page.DefaultTextStyle(x => x.FontSize(11));
+
+                page.Header()
+                    .Text($"Journal entries by date: \n{startDate:MMM dd, yyyy} - {endDate:MMM dd, yyyy}")
+                    .SemiBold().FontSize(20).FontColor("#38182F");
+
+                page.Content()
+                    .PaddingVertical(1, Unit.Centimetre)
+                    .Column(column =>
+                    {
+                        foreach (var entry in entriesToExport)
+                        {
+                            column.Item().Border(1).BorderColor("#38182F").Padding(10).Column(entryColumn =>
+                            {
+                                entryColumn.Item().Text(entry.Title).Bold().FontSize(14);
+                                entryColumn.Item().PaddingTop(5).Text($"Date: {entry.CreatedAt:MMM dd, yyyy}").FontSize(10).FontColor("#666666");
+
+                                if (entry.PrimaryMoodID.HasValue)
+                                {
+                                    var moodName = GetMoodName(entry.PrimaryMoodID.Value);
+                                    if (!string.IsNullOrEmpty(moodName))
+                                    {
+                                        entryColumn.Item().PaddingTop(5).Text($"Mood: {moodName}").FontSize(10).FontColor("#38182F");
+                                    }
+                                }
+
+                                var plainContent = StripHtmlTags(entry.Content);
+                                entryColumn.Item().PaddingTop(10).Text(plainContent).FontSize(11).LineHeight(1.5f);
+
+                                entryColumn.Item().PaddingTop(5).Text($"{entry.WordCount} words").FontSize(9).FontColor("#999999");
+                            });
+
+                            column.Item().PaddingVertical(10);
+                        }
+                    });
+
+                page.Footer()
+                    .AlignCenter()
+                    .Text(x =>
+                    {
+                        x.Span("Page ");
+                        x.CurrentPageNumber();
+                        x.Span(" of ");
+                        x.TotalPages();
+                    });
+            });
+        }).GeneratePdf(stream);
+
+        return stream.ToArray();
+    }
+
+    private async Task ExportToPDF()
+    {
+        try
+        {
+            isExporting = true;
+            StateHasChanged();
+
+            var pdfBytes = GeneratePDF(filteredEntries);
+            var fileName = $"JournalExport_{startDate:yyyyMMdd}_to_{endDate:yyyyMMdd}.pdf";
+
+            await SavePDFile(fileName, pdfBytes);
+
+            Snackbar.Add("PDF exported successfully!", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Export failed: {ex.Message}", Severity.Error);
+            System.Diagnostics.Debug.WriteLine($"Export error: {ex}");
+        }
+        finally
+        {
+            isExporting = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SavePDFile(string fileName, byte[] pdfBytes)
+    {
+        var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+
+        
+        var window = Application.Current?.Windows[0]?.Handler?.PlatformView as Microsoft.UI.Xaml.Window;
+        if (window != null)
+        {
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hwnd);
+        }
+
+        savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+        savePicker.SuggestedFileName = fileName;
+        savePicker.FileTypeChoices.Add("PDF Document", new List<string> { ".pdf" });
+
+        var file = await savePicker.PickSaveFileAsync();
+        if (file != null)
+        {
+            await Windows.Storage.FileIO.WriteBytesAsync(file, pdfBytes);
+            Snackbar.Add($"PDF saved to {file.Path}", Severity.Success);
+        }
+    }
+
+    private string StripHtmlTags(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+            return string.Empty;
+
+        var plainText = System.Text.RegularExpressions.Regex.Replace(html, "<[^>]*>", "");
+        return System.Net.WebUtility.HtmlDecode(plainText).Trim();
     }
 }
