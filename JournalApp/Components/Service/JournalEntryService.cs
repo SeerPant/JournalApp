@@ -129,34 +129,6 @@ namespace JournalApp.Components.Service
                 .ToList();
         }
 
-        //filtering by mood  
-        public async Task<List<JournalEntry>> FilterByMoodAsync(int userID, int moodID)
-        {
-            var db = _databaseService.GetConnection();
-
-            //getting entries of user
-            var allEntries = await db.Table<JournalEntry>()
-                .Where(e => e.UserID == userID)
-                .ToListAsync();
-
-            return allEntries
-                .Where(e => e.PrimaryMoodID == moodID ||
-                            e.SecondaryMoodFirstID == moodID ||
-                            e.SecondaryMoodSecondID == moodID)
-                .OrderByDescending(e => e.CreatedAt)
-                .ToList();
-        }
-
-        //filtering by category 
-        public async Task<List<JournalEntry>> FilterByCategoryAsync(int userID, int categoryID)
-        {
-            var db = _databaseService.GetConnection();
-            return await db.Table<JournalEntry>()
-                .Where(e => e.UserID == userID && e.CategoryID == categoryID)
-                .OrderByDescending(e => e.CreatedAt)
-                .ToListAsync();
-        }
-
         //getting paginated entries 
         public async Task<List<JournalEntry>> GetPagedEntriesAsync(int userId, int pageNumber, int pageSize)
         {

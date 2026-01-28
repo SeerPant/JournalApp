@@ -37,29 +37,6 @@ namespace JournalApp.Components.Service
                 .ToListAsync();
         }
 
-        // Create custom tag
-        public async Task<int> CreateTagAsync(string tagName)
-        {
-            // Check if tag already exists
-            var db = _databaseService.GetConnection();
-            var existing = await db.Table<Tag>()
-                .Where(t => t.TagName == tagName)
-                .FirstOrDefaultAsync();
-
-            if (existing != null)
-                return existing.TagID;
-
-            var tag = new Tag
-            {
-                TagName = tagName,
-                IsPreDefined = false,
-                CreatedAt = DateTime.Now
-            };
-
-            await db.InsertAsync(tag);
-            return tag.TagID;
-        }
-
         //getting tags for entry
         public async Task<List<Tag>> GetTagsForEntryAsync(int entryId)
         {

@@ -15,8 +15,8 @@ namespace JournalApp.Components.Service
         
         //Search operations
         Task<List<JournalEntry>> SearchEntriesAsync(int userId, string searchTerm);
-        Task<List<JournalEntry>> FilterByMoodAsync(int userId, int moodId);
-        Task<List<JournalEntry>> FilterByCategoryAsync(int userId, int categoryId);
+        //Task<List<JournalEntry>> FilterByMoodAsync(int userId, int moodId);
+        //Task<List<JournalEntry>> FilterByCategoryAsync(int userId, int categoryId);
         
         //pagination
         Task<List<JournalEntry>> GetPagedEntriesAsync(int userId, int pageNumber, int pageSize);

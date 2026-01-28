@@ -37,28 +37,28 @@ namespace JournalApp.Components.Service
         //method to hash the pin 
         private string HashPin(string pin)
         {
-            using var sha256 = SHA256.Create(); 
-            var bytes = Encoding.UTF8.GetBytes(pin); 
+            using var sha256 = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(pin);
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
-        } 
+        }
 
         //creating user
-        public async Task<bool> CreateUserAsync(string username, string pin)
-        {
-            if (await HasUserAsync()) return false; 
+        //public async Task<bool> CreateUserAsync(string username, string pin)
+        //{
+        //    if (await HasUserAsync()) return false; 
 
-            var user = new User
-            {
-                userName = username, 
-                pinHash = HashPin(pin),
-                CreatedDate = DateTime.Now, LastLoginDate = DateTime.Now
-            };
+        //    var user = new User
+        //    {
+        //        userName = username, 
+        //        pinHash = HashPin(pin),
+        //        CreatedDate = DateTime.Now, LastLoginDate = DateTime.Now
+        //    };
 
-            var db = _databaseService.GetConnection(); 
-            await db.InsertAsync(user); 
-            return true;
-        }
+        //    var db = _databaseService.GetConnection(); 
+        //    await db.InsertAsync(user); 
+        //    return true;
+        //}
 
         //method to validate pin 
         public async Task<bool> ValidatePinAsync(string pin)
@@ -98,13 +98,13 @@ namespace JournalApp.Components.Service
         }
 
         //method to delete user  
-        public async Task DeleteUserAsync()
-        {
-            var user = await GetUserAsync(); 
-            if (user == null) return; 
+        //public async Task DeleteUserAsync()
+        //{
+        //    var user = await GetUserAsync(); 
+        //    if (user == null) return; 
 
-            var db = _databaseService.GetConnection(); 
-            await db.DeleteAsync(user);
-        }
+        //    var db = _databaseService.GetConnection(); 
+        //    await db.DeleteAsync(user);
+        //}
     }
 }

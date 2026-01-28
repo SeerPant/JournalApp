@@ -20,13 +20,13 @@ namespace JournalApp.Components.Service
         }
 
         //getting moods by category
-        public async Task<List<Mood>> GetMoodsByCategoryAsync(string category)
-        {
-            var db = _databaseService.GetConnection();
-            return await db.Table<Mood>()
-                .Where(m => m.Category == category)
-                .ToListAsync();
-        }
+        //public async Task<List<Mood>> GetMoodsByCategoryAsync(string category)
+        //{
+        //    var db = _databaseService.GetConnection();
+        //    return await db.Table<Mood>()
+        //        .Where(m => m.Category == category)
+        //        .ToListAsync();
+        //}
 
         //getting mood by ID
         public async Task<Mood?> GetMoodByIdAsync(int moodId)

@@ -7,10 +7,10 @@ namespace JournalApp.Components.Service
     {
         Task<User?> GetUserAsync();
         Task<bool> HasUserAsync();
-        Task<bool> CreateUserAsync(string username, string pin); 
+        //Task<bool> CreateUserAsync(string username, string pin); 
         Task<bool> ValidatePinAsync(string pin);
-        Task<bool> UpdatePinAsync(string oldPin, string newPin);
+        //Task<bool> UpdatePinAsync(string oldPin, string newPin);
         Task UpdateLastLoginAsync();
-        Task DeleteUserAsync();
+        //Task DeleteUserAsync();
     }
 }
